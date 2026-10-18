@@ -59,16 +59,17 @@ alter table public.attendance enable row level security;
 alter table public.ledger_entries enable row level security;
 drop policy if exists "profile self or super admin read" on public.profiles;
 create policy "profile self or super admin read" on public.profiles for select to authenticated using (id=auth.uid() or public.current_role()='super_admin');
+-- Profile roles and branch assignments are changed by a trusted administrator in SQL,
+-- not by users updating their own profile from the client.
 drop policy if exists "profile self update" on public.profiles;
-create policy "profile self update" on public.profiles for update to authenticated using (id=auth.uid()) with check (id=auth.uid());
 drop policy if exists "employees read by role" on public.employees;
-create policy "employees read by role" on public.employees for select to authenticated using (public.current_role()='super_admin' or (public.current_role()='branch_manager' and branch_name=public.current_branch()) or (public.current_role()='employee' and exists(select 1 from public.profiles p where p.id=auth.uid() and p.branch_name=employees.branch_name)));
+create policy "employees read by role" on public.employees for select to authenticated using (public.current_role()='super_admin' or (public.current_role()='branch_manager' and branch_name=public.current_branch()));
 drop policy if exists "employees manager insert" on public.employees;
 create policy "employees manager insert" on public.employees for insert to authenticated with check (public.can_manage_branch(branch_name));
 drop policy if exists "employees manager update" on public.employees;
 create policy "employees manager update" on public.employees for update to authenticated using (public.can_manage_branch(branch_name)) with check (public.can_manage_branch(branch_name));
 drop policy if exists "attendance read by role" on public.attendance;
-create policy "attendance read by role" on public.attendance for select to authenticated using (public.current_role()='super_admin' or exists(select 1 from public.employees e where e.id=attendance.employee_id and (public.can_manage_branch(e.branch_name) or (public.current_role()='employee' and exists(select 1 from public.profiles p where p.id=auth.uid() and p.branch_name=e.branch_name)))));
+create policy "attendance read by role" on public.attendance for select to authenticated using (exists(select 1 from public.employees e where e.id=attendance.employee_id and public.can_manage_branch(e.branch_name)));
 drop policy if exists "attendance managers write" on public.attendance;
 create policy "attendance managers write" on public.attendance for all to authenticated using (exists(select 1 from public.employees e where e.id=attendance.employee_id and public.can_manage_branch(e.branch_name))) with check (exists(select 1 from public.employees e where e.id=attendance.employee_id and public.can_manage_branch(e.branch_name)));
 drop policy if exists "ledger read by role" on public.ledger_entries;
