@@ -188,3 +188,31 @@ select option:checked,.form select option:checked,.form-grid select option:check
   select option,.form select option,.form-grid select option,.auth-form select option{background:#fff;color:#17253b}
   select option:checked,.form select option:checked,.form-grid select option:checked{background:#d9f5f0;color:#075e56}
 }
+
+
+/* Native select popup cannot be fully themed consistently by browsers; keep the closed control premium. */
+.form-grid select,
+select{
+  border-radius:12px;
+  background-color:#0c1627;
+  color:#f2f6fc;
+  border:1px solid #34465e;
+  font-weight:600;
+  letter-spacing:.1px;
+  padding-left:16px;
+  padding-right:44px;
+  box-shadow:0 1px 2px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.025);
+}
+.form-grid select:hover,select:hover{border-color:#58758e;background-color:#101d30}
+.form-grid select:focus,select:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(88,225,206,.12);outline:none}
+.form-grid select option,select option{background:#101b2d;color:#f2f6fc;padding:12px}
+.form-grid select option:checked,select option:checked{background:#23464d;color:#fff}
+@media(prefers-color-scheme:light){
+ .form-grid select,select{background-color:#fff;color:#17253b;border-color:#cbd7e5}
+ .form-grid select:hover,select:hover{background-color:#f7fbff;border-color:#8aa5bc}
+ .form-grid select option,select option{background:#fff;color:#17253b}
+ .form-grid select option:checked,select option:checked{background:#d9f5f0;color:#075e56}
+}
+/* Ledger form spacing and consistent field sizing */
+.form-grid label{gap:10px}
+.form-grid select{height:48px;line-height:48px}
