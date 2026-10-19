@@ -43,13 +43,13 @@ export default function LoginPage() {
         <section className="auth-promo">
           <span className="eyebrow"><span className="eyebrow-dot" /> BUILT FOR HOTEL TEAMS</span>
           <h1>Great hospitality<br />starts with <span>great teams.</span></h1>
-          <p className="auth-promo-copy">Keep your people, attendance and payroll organised in one calm, secure workspace.</p>
+          <p className="auth-promo-copy">Manage employees, attendance and payroll.</p>
           <div className="auth-feature-list">
-            <div><span className="auth-feature-icon"><Users size={18}/></span><span><b>Employee management</b><small>One clear view of your team</small></span></div>
-            <div><span className="auth-feature-icon"><CalendarCheck size={18}/></span><span><b>Daily attendance</b><small>Track every shift with confidence</small></span></div>
-            <div><span className="auth-feature-icon"><Wallet size={18}/></span><span><b>Salary & advances</b><small>Keep payments and balances together</small></span></div>
+            <div><span className="auth-feature-icon"><Users size={18}/></span><span><b>Employee management</b><small>Manage your team</small></span></div>
+            <div><span className="auth-feature-icon"><CalendarCheck size={18}/></span><span><b>Daily attendance</b><small>Daily records</small></span></div>
+            <div><span className="auth-feature-icon"><Wallet size={18}/></span><span><b>Salary & advances</b><small>Track payments</small></span></div>
           </div>
-          <p className="auth-promo-foot">MADE FOR THE PEOPLE WHO MAKE EVERY STAY SPECIAL</p>
+          <p className="auth-promo-foot">MORYAEMP</p>
         </section>
 
         <section className="auth-panel" aria-labelledby="signin-title">
@@ -57,7 +57,7 @@ export default function LoginPage() {
             <div className="auth-panel-icon"><ShieldCheck size={22}/></div>
             <p className="eyebrow">WELCOME BACK</p>
             <h2 id="signin-title">Sign in to HotelFlow</h2>
-            <p>Enter your account details to continue to your workspace.</p>
+            <p>Enter your email and password.</p>
           </div>
           <form className="auth-form" onSubmit={submit}>
             <label htmlFor="email">Email address</label>
