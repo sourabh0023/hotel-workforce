@@ -112,3 +112,19 @@ td small{color:#7f91aa;margin-top:5px}
 .form-grid>.secondary:hover{border-color:#52718a;background:#192941}
 @media(max-width:620px){.form-grid{grid-template-columns:minmax(0,1fr);gap:15px}.form-grid>.primary,.form-grid>.secondary{grid-column:1}}
 @media(prefers-color-scheme:light){.form-grid label{color:#273950}.form-grid input,.form-grid select{background-color:#fff;color:#17253b;border-color:#cbd7e5}.form-grid input::placeholder{color:#8796aa}.form-grid select option{background:#fff;color:#17253b}.form-grid>.secondary{background:#f2f6fa;color:#35465c;border-color:#cbd7e5}}
+
+/* Header action controls */
+.nav-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+.secondary{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:10px 14px;border:1px solid #34465e;border-radius:11px;background:#142137;color:#dce7f6;font:600 12px 'DM Sans',ui-sans-serif,system-ui,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background .18s,border-color .18s,transform .18s}
+.secondary:hover{background:#1a2a42;border-color:#52718a;transform:translateY(-1px)}
+.secondary:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+.secondary:disabled{opacity:.55;cursor:wait;transform:none}
+.nav-actions .secondary{min-height:40px;padding:10px 14px;background:linear-gradient(135deg,#17263a,#101b2d);border-color:#34465e;color:#e7eef8;border-radius:12px;box-shadow:0 3px 10px rgba(0,0,0,.12)}
+.nav-actions .secondary:hover{background:linear-gradient(135deg,#20364b,#14283a);border-color:#58e1ce;color:#fff;box-shadow:0 5px 18px rgba(0,0,0,.2)}
+.payroll-dashboard{margin-top:62px}
+.payroll-total{display:grid;gap:9px;margin-bottom:20px;max-width:100%;cursor:default}
+.payroll-total:hover{transform:none}
+.balance{color:#58e1ce;font-weight:800}
+.negative-balance{color:#ffb4b4;font-weight:800}
+@media(max-width:560px){.topbar{gap:10px}.nav-actions{gap:7px}.nav-actions .pill{display:none}.nav-actions .secondary{padding:9px 10px;font-size:11px}.nav-actions .secondary svg{width:14px;height:14px}}
+@media(prefers-color-scheme:light){.secondary,.nav-actions .secondary{background:#fff;color:#263950;border-color:#cbd7e5;box-shadow:0 2px 7px rgba(20,40,70,.06)}.secondary:hover,.nav-actions .secondary:hover{background:#f0faf8;border-color:#0d9488;color:#123a3a}}
