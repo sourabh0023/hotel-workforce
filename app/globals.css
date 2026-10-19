@@ -241,3 +241,7 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
  .auth-form label{color:#333}
  .auth-form input{background:#fff;color:#171717}
 }
+
+
+/* Highlight inactive employees */
+.inactive-status { color: #dc2626 !important; border-color: #dc2626 !important; background: rgba(220, 38, 38, 0.12) !important; }
