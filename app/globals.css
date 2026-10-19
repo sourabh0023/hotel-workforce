@@ -259,4 +259,4 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
 #overview .card{min-height:150px;justify-content:flex-start}
 #overview .card h3{margin-bottom:0}
 
-.dashboard-hero h1 .morya-orange{color:#ff7900}.dashboard-hero h1 .team-white{color:#ffffff}
+.dashboard-hero h1 .morya-orange{color:#ff7900 !important}.dashboard-hero h1 .team-white{color:#ffffff !important}
