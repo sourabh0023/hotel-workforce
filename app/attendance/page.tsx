@@ -1,10 +1,83 @@
 "use client";
-import Link from "next/link";import {FormEvent,useEffect,useState} from "react";import {ArrowLeft,CalendarCheck,Plus} from "lucide-react";import Protected from "../components/Protected";import {supabase} from "../lib/supabase";
-type Employee={id:string;full_name:string;employee_code:string;branch_name:string};type RecordRow={id:string;work_date:string;status:string;employee_id:string;employees?:{full_name:string;employee_code:string}|null;notes:string|null};
-function Attendance(){const today=new Date().toLocaleDateString("en-CA");const [date,setDate]=useState(today);const [employees,setEmployees]=useState<Employee[]>([]);const [rows,setRows]=useState<RecordRow[]>([]);const [employee,setEmployee]=useState("");const [status,setStatus]=useState("present");const [notes,setNotes]=useState("");const [rangeStart,setRangeStart]=useState(today);const [rangeEnd,setRangeEnd]=useState(today);const [rangeBusy,setRangeBusy]=useState(false);const [rangeMessage,setRangeMessage]=useState("");const [error,setError]=useState("");const [busy,setBusy]=useState(false);
-async function load(){const [e,a]=await Promise.all([supabase().from("employees").select("id,full_name,employee_code,branch_name").eq("active",true).order("full_name"),supabase().from("attendance").select("id,work_date,status,employee_id,notes,employees(full_name,employee_code)").eq("work_date",date).order("created_at",{ascending:false})]);if(e.error||a.error)setError(e.error?.message||a.error?.message||"Could not load records");setEmployees((e.data??[]) as Employee[]);setRows((a.data??[]) as unknown as RecordRow[])}
-useEffect(()=>{load()},[date]);
-async function add(e:FormEvent){e.preventDefault();setBusy(true);setError("");const {data:user}=await supabase().auth.getUser();const {error}=await supabase().from("attendance").upsert({employee_id:employee,work_date:date,status,notes:notes.trim()||null,recorded_by:user.user?.id},{onConflict:"employee_id,work_date"});if(error)setError(error.message);else{setEmployee("");setNotes("");await load()}setBusy(false)}
-async function addAbsenceRange(e:FormEvent){e.preventDefault();setRangeBusy(true);setError("");setRangeMessage("");if(!employee){setError("Choose an employee first.");setRangeBusy(false);return}if(rangeEnd<rangeStart){setError("End date must be on or after the start date.");setRangeBusy(false);return}const client=supabase();const {data:user}=await client.auth.getUser();const {data:existing,error:readError}=await client.from("attendance").select("work_date,status").eq("employee_id",employee).gte("work_date",rangeStart).lte("work_date",rangeEnd);if(readError){setError(readError.message);setRangeBusy(false);return}const alreadyRecorded=new Set((existing??[]).map(r=>r.work_date));const dates:string[]=[];for(let d=new Date(rangeStart+"T12:00:00");d.toISOString().slice(0,10)<=rangeEnd;d.setDate(d.getDate()+1)){const day=d.toISOString().slice(0,10);if(!alreadyRecorded.has(day))dates.push(day)}if(dates.length){const payload=dates.map(work_date=>({employee_id:employee,work_date,status:"absent",notes:"Bulk absence range",recorded_by:user.user?.id}));const {error:saveError}=await client.from("attendance").upsert(payload,{onConflict:"employee_id,work_date"});if(saveError){setError(saveError.message);setRangeBusy(false);return}}const skipped=alreadyRecorded.size;setRangeMessage("Saved "+dates.length+" absent day(s)."+(skipped?" Kept "+skipped+" date(s) unchanged because attendance was already recorded.":""));setDate(rangeStart);await load();setRangeBusy(false)}
-return <main className="shell"><nav className="topbar"><Link href="/" className="brand"><span className="brand-mark"><CalendarCheck/></span><span>Hotel<span className="accent">Flow</span><small>WORKFORCE MANAGER</small></span></Link><Link href="/" className="back"><ArrowLeft size={16}/> Dashboard</Link></nav><section className="content"><p className="eyebrow">DAILY OPERATIONS</p><h1>Attendance register</h1><p className="sub">Record daily attendance.</p><div className="form form-grid"><label>Attendance date<input type="date" required value={date} onChange={e=>setDate(e.target.value)}/></label></div><form className="form form-grid" onSubmit={add}><label>Employee<select required value={employee} onChange={e=>setEmployee(e.target.value)}><option value="">Choose employee</option>{employees.map(e=><option key={e.id} value={e.id}>{e.full_name} · {e.employee_code} · {e.branch_name}</option>)}</select></label><label>Status<select value={status} onChange={e=>setStatus(e.target.value)}><option value="present">Present</option><option value="absent">Absent</option><option value="leave">Leave</option><option value="half_day">Half day</option></select></label><label>Notes (optional)<input value={notes} onChange={e=>setNotes(e.target.value)}/></label><button className="primary" disabled={busy||!employee}><Plus size={16}/>{busy?"Saving…":"Save attendance"}</button></form><section className="absence-range"><div><p className="eyebrow">BULK ATTENDANCE</p><h2>Mark absent for a date range</h2><p className="sub">Mark an employee absent for a date range. Salary deductions update on the dashboard.</p></div><form className="form form-grid absence-form" onSubmit={addAbsenceRange}><label>Employee<select required value={employee} onChange={e=>setEmployee(e.target.value)}><option value="">Choose employee</option>{employees.map(e=><option key={e.id} value={e.id}>{e.full_name} · {e.employee_code}</option>)}</select></label><label>Absent from<input type="date" required value={rangeStart} onChange={e=>setRangeStart(e.target.value)}/></label><label>Absent through<input type="date" required min={rangeStart} value={rangeEnd} onChange={e=>setRangeEnd(e.target.value)}/></label><button className="primary" disabled={rangeBusy||!employee}><CalendarCheck size={16}/>{rangeBusy?"Saving range…":"Save absence range"}</button></form>{rangeMessage&&<p className="success-message">{rangeMessage}</p>}</section>{error&&<p className="error">{error}</p>}<div className="table-wrap"><table><thead><tr><th>Employee</th><th>Date</th><th>Status</th><th>Notes</th></tr></thead><tbody>{rows.length===0?<tr><td colSpan={4}>No attendance records for this date.</td></tr>:rows.map(r=><tr key={r.id}><td>{r.employees?.full_name??r.employee_id}</td><td>{r.work_date}</td><td><span className="status">{r.status.replace("_"," ")}</span></td><td>{r.notes||"—"}</td></tr>)}</tbody></table></div></section></main>}
-export default function AttendancePage(){return <Protected><Attendance/></Protected>}
+import Link from "next/link";
+import { FormEvent, useEffect, useState } from "react";
+import { ArrowLeft, CalendarCheck } from "lucide-react";
+import Protected from "../components/Protected";
+import { supabase } from "../lib/supabase";
+
+type Employee = { id: string; full_name: string; employee_code: string; branch_name: string };
+type RecordRow = { id: string; work_date: string; status: string; employee_id: string; employees?: { full_name: string; employee_code: string } | null; notes: string | null };
+
+function AbsencePageContent() {
+  const today = new Date().toLocaleDateString("en-CA");
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [rows, setRows] = useState<RecordRow[]>([]);
+  const [employee, setEmployee] = useState("");
+  const [rangeStart, setRangeStart] = useState(today);
+  const [rangeEnd, setRangeEnd] = useState(today);
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+
+  async function load() {
+    const client = supabase();
+    const [e, a] = await Promise.all([
+      client.from("employees").select("id,full_name,employee_code,branch_name").eq("active", true).order("full_name"),
+      client.from("attendance").select("id,work_date,status,employee_id,notes,employees(full_name,employee_code)").eq("status", "absent").gte("work_date", rangeStart).lte("work_date", rangeEnd).order("work_date", { ascending: false })
+    ]);
+    if (e.error || a.error) setError(e.error?.message || a.error?.message || "Could not load absence records.");
+    setEmployees((e.data ?? []) as Employee[]);
+    setRows((a.data ?? []) as unknown as RecordRow[]);
+  }
+
+  useEffect(() => { load(); }, [rangeStart, rangeEnd]);
+
+  async function saveAbsences(event: FormEvent) {
+    event.preventDefault();
+    setBusy(true); setError(""); setMessage("");
+    if (!employee) { setError("कृपया कर्मचारी निवडा."); setBusy(false); return; }
+    if (rangeEnd < rangeStart) { setError("शेवटची तारीख सुरुवातीच्या तारखेनंतर असावी."); setBusy(false); return; }
+    const client = supabase();
+    const { data: user } = await client.auth.getUser();
+    const { data: existing, error: readError } = await client.from("attendance")
+      .select("work_date,status").eq("employee_id", employee).gte("work_date", rangeStart).lte("work_date", rangeEnd);
+    if (readError) { setError(readError.message); setBusy(false); return; }
+    const existingRows = existing ?? [];
+    const existingAbsences = new Set(existingRows.filter(r => r.status === "absent").map(r => r.work_date));
+    const dates: string[] = [];
+    for (let d = new Date(rangeStart + "T12:00:00"); d.toISOString().slice(0, 10) <= rangeEnd; d.setDate(d.getDate() + 1)) {
+      const day = d.toISOString().slice(0, 10);
+      if (!existingAbsences.has(day)) dates.push(day);
+    }
+    if (dates.length) {
+      const payload = dates.map(work_date => ({ employee_id: employee, work_date, status: "absent", notes: "Bulk absence", recorded_by: user.user?.id }));
+      const { error: saveError } = await client.from("attendance").upsert(payload, { onConflict: "employee_id,work_date" });
+      if (saveError) { setError(saveError.message); setBusy(false); return; }
+    }
+    const overwritten = existingRows.filter(r => r.status !== "absent").length;
+    setMessage(dates.length + " अनुपस्थितीच्या नोंदी जतन झाल्या." + (overwritten ? " " + overwritten + " आधीच्या नोंदी अनुपस्थित म्हणून बदलल्या." : ""));
+    await load();
+    setBusy(false);
+  }
+
+  return <main className="shell">
+    <nav className="topbar"><Link href="/" className="brand"><span className="brand-mark"><CalendarCheck /></span><span>Morya<span className="accent">EMP</span><small>WORKFORCE MANAGER</small></span></Link><Link href="/" className="back"><ArrowLeft size={16} /> Dashboard</Link></nav>
+    <section className="content">
+      <p className="eyebrow">पगारासाठी अनुपस्थिती</p><h1>Bulk absence entry</h1>
+      <p className="sub">फक्त अनुपस्थित दिवस नोंदवा. हजेरी किंवा उपस्थिती नोंदवण्याची गरज नाही. अनुपस्थित दिवसांनुसार पगारातून कपात डॅशबोर्डवर मोजली जाईल.</p>
+      <section className="absence-range">
+        <div><p className="eyebrow">एकाच वेळी अनेक दिवस</p><h2>अनुपस्थितीची तारीख निवडा</h2><p className="sub">कर्मचारी आणि अनुपस्थितीचा कालावधी निवडा.</p></div>
+        <form className="form form-grid absence-form" onSubmit={saveAbsences}>
+          <label>कर्मचारी<select required value={employee} onChange={e => setEmployee(e.target.value)}><option value="">कर्मचारी निवडा</option>{employees.map(e => <option key={e.id} value={e.id}>{e.full_name} · {e.employee_code} · {e.branch_name}</option>)}</select></label>
+          <label>पासून<input type="date" required value={rangeStart} onChange={e => setRangeStart(e.target.value)} /></label>
+          <label>पर्यंत<input type="date" required min={rangeStart} value={rangeEnd} onChange={e => setRangeEnd(e.target.value)} /></label>
+          <button className="primary" disabled={busy || !employee}><CalendarCheck size={16} />{busy ? "जतन करत आहे…" : "अनुपस्थिती जतन करा"}</button>
+        </form>
+        {message && <p className="success-message">{message}</p>}
+      </section>
+      {error && <p className="error">{error}</p>}
+      <div className="table-wrap"><table><thead><tr><th>कर्मचारी</th><th>तारीख</th><th>स्थिती</th><th>नोंद</th></tr></thead><tbody>{rows.length === 0 ? <tr><td colSpan={4}>या कालावधीत अनुपस्थितीची नोंद नाही.</td></tr> : rows.map(r => <tr key={r.id}><td>{r.employees?.full_name ?? r.employee_id}<small>{r.employees?.employee_code ?? ""}</small></td><td>{r.work_date}</td><td><span className="status">अनुपस्थित</span></td><td>{r.notes || "—"}</td></tr>)}</tbody></table></div>
+    </section>
+  </main>;
+}
+export default function AttendancePage() { return <Protected><AbsencePageContent /></Protected>; }
