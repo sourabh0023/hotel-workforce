@@ -35,7 +35,7 @@ create table if not exists public.ledger_entries (
   id uuid primary key default gen_random_uuid(),
   employee_id uuid not null references public.employees(id),
   entry_date date not null default current_date,
-  entry_type text not null check (entry_type in ('earning','advance','payment','deduction','adjustment')),
+  entry_type text not null check (entry_type in ('earning','advance','payment','deduction','adjustment','advance_adjustment')),
   amount numeric(12,2) not null check (amount > 0),
   description text,
   created_by uuid references auth.users(id),
