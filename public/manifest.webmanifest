@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "HotelFlow Workforce Manager",
-  "short_name": "HotelFlow",
+  "name": "MoryaEMP",
+  "short_name": "MoryaEMP",
   "description": "Manage hotel employees, attendance, monthly salary, advances and payments.",
   "start_url": "/",
   "scope": "/",
