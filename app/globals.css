@@ -128,3 +128,5 @@ td small{color:#7f91aa;margin-top:5px}
 .negative-balance{color:#ffb4b4;font-weight:800}
 @media(max-width:560px){.topbar{gap:10px}.nav-actions{gap:7px}.nav-actions .pill{display:none}.nav-actions .secondary{padding:9px 10px;font-size:11px}.nav-actions .secondary svg{width:14px;height:14px}}
 @media(prefers-color-scheme:light){.secondary,.nav-actions .secondary{background:#fff;color:#263950;border-color:#cbd7e5;box-shadow:0 2px 7px rgba(20,40,70,.06)}.secondary:hover,.nav-actions .secondary:hover{background:#f0faf8;border-color:#0d9488;color:#123a3a}}
+
+.absence-range{display:grid;gap:16px;margin:30px 0;padding:22px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(140deg,rgba(19,31,51,.88),rgba(16,24,40,.92))}.absence-range h2{margin:8px 0;font-size:20px}.absence-range .sub{max-width:760px;margin:8px 0 0}.absence-form{margin-top:0}.success-message{margin:0;color:#58e1ce;font-size:13px;line-height:1.6}@media(prefers-color-scheme:light){.absence-range{background:#fff}.success-message{color:#087f73}}
