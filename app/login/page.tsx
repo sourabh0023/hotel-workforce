@@ -2,24 +2,78 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Building2, ShieldCheck } from "lucide-react";
+import { Building2, ShieldCheck, Eye, EyeOff, ArrowRight, LockKeyhole, Users, CalendarCheck, Wallet } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email,setEmail] = useState("");
-  const [password,setPassword] = useState("");
-  const [busy,setBusy] = useState(false);
-  const [message,setMessage] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+
   async function submit(e: FormEvent) {
-    e.preventDefault(); setBusy(true); setMessage("");
+    e.preventDefault();
+    setBusy(true);
+    setMessage("");
     try {
       const { error } = await supabase().auth.signInWithPassword({ email: email.trim(), password });
       if (error) throw error;
       router.replace("/");
       router.refresh();
-    } catch (err) { setMessage(err instanceof Error ? err.message : "Unable to sign in."); }
-    finally { setBusy(false); }
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : "Unable to sign in. Please check your details and try again.");
+    } finally {
+      setBusy(false);
+    }
   }
-  return <main className="shell"><nav className="topbar"><Link href="/" className="brand"><span className="brand-mark"><Building2/></span><span>Hotel<span className="accent">Flow</span><small>WORKFORCE MANAGER</small></span></Link></nav><section className="content login-card"><p className="eyebrow">SECURE WORKSPACE</p><h1>Sign in</h1><p className="sub">Use the account created for your hotel workforce workspace.</p><form className="form" onSubmit={submit}><label>Email<input type="email" autoComplete="username" required value={email} onChange={e=>setEmail(e.target.value)} /></label><label>Password<input type="password" autoComplete="current-password" required value={password} onChange={e=>setPassword(e.target.value)} /></label><button className="primary" disabled={busy}>{busy ? "Signing in…" : "Sign in"} <ShieldCheck size={16}/></button>{message && <p className="error">{message}</p>}</form><p className="muted">Create the first account in Supabase Authentication, then assign its profile role using the setup instructions in README.</p></section></main>;
+
+  return (
+    <main className="auth-shell">
+      <header className="auth-topbar">
+        <Link href="/" className="brand" aria-label="HotelFlow home">
+          <span className="brand-mark"><Building2 size={25} strokeWidth={2.1} /></span>
+          <span className="brand-wordmark">Hotel<span className="accent">Flow</span><small>WORKFORCE MANAGER</small></span>
+        </Link>
+        <span className="secure-chip"><LockKeyhole size={14} /> Secure workspace</span>
+      </header>
+
+      <div className="auth-layout">
+        <section className="auth-promo">
+          <span className="eyebrow"><span className="eyebrow-dot" /> BUILT FOR HOTEL TEAMS</span>
+          <h1>Great hospitality<br />starts with <span>great teams.</span></h1>
+          <p className="auth-promo-copy">Keep your people, attendance and payroll organised in one calm, secure workspace.</p>
+          <div className="auth-feature-list">
+            <div><span className="auth-feature-icon"><Users size={18}/></span><span><b>Employee management</b><small>One clear view of your team</small></span></div>
+            <div><span className="auth-feature-icon"><CalendarCheck size={18}/></span><span><b>Daily attendance</b><small>Track every shift with confidence</small></span></div>
+            <div><span className="auth-feature-icon"><Wallet size={18}/></span><span><b>Salary & advances</b><small>Keep payments and balances together</small></span></div>
+          </div>
+          <p className="auth-promo-foot">MADE FOR THE PEOPLE WHO MAKE EVERY STAY SPECIAL</p>
+        </section>
+
+        <section className="auth-panel" aria-labelledby="signin-title">
+          <div className="auth-panel-heading">
+            <div className="auth-panel-icon"><ShieldCheck size={22}/></div>
+            <p className="eyebrow">WELCOME BACK</p>
+            <h2 id="signin-title">Sign in to HotelFlow</h2>
+            <p>Enter your account details to continue to your workspace.</p>
+          </div>
+          <form className="auth-form" onSubmit={submit}>
+            <label htmlFor="email">Email address</label>
+            <input id="email" type="email" autoComplete="username" placeholder="you@yourhotel.com" required value={email} onChange={e => setEmail(e.target.value)} />
+            <div className="auth-password-row"><label htmlFor="password">Password</label></div>
+            <div className="password-field">
+              <input id="password" type={showPassword ? "text" : "password"} autoComplete="current-password" placeholder="Enter your password" required value={password} onChange={e => setPassword(e.target.value)} />
+              <button className="password-toggle" type="button" onClick={() => setShowPassword(v => !v)} aria-label={showPassword ? "Hide password" : "Show password"}>{showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}</button>
+            </div>
+            {message && <p className="auth-error" role="alert">{message}</p>}
+            <button className="auth-submit" type="submit" disabled={busy}>{busy ? "Signing you in…" : "Sign in"} {!busy && <ArrowRight size={18}/>}</button>
+          </form>
+          <div className="auth-panel-footer"><LockKeyhole size={14}/><span>Your account is protected with secure authentication.</span></div>
+        </section>
+      </div>
+      <footer className="auth-footer"><span>© {new Date().getFullYear()} HotelFlow Workforce Manager</span><span>People first. Every shift.</span></footer>
+    </main>
+  );
 }
