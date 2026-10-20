@@ -280,3 +280,10 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
 .transaction-plus{color:#22c55e}.transaction-minus{color:#fb923c}
 @media(max-width:620px){.transaction-type-options{grid-template-columns:minmax(0,1fr)}.transaction-option{padding:13px 14px}}
 @media(prefers-color-scheme:light){.transaction-option{background:#fff}.transaction-option.selected{background:#fff5eb}}
+
+
+/* Compact, consistent transaction type selector */
+.transaction-select-label{display:flex;flex-direction:column;gap:9px;min-width:0;grid-column:1/-1;color:var(--text);font-size:13px;font-weight:700}
+.transaction-select-label select{width:100%;min-height:48px;padding:0 44px 0 14px;border:1px solid #34465e;border-radius:12px;background-color:#0c1627;color:#f2f6fc;font:500 14px 'DM Sans',ui-sans-serif,system-ui,sans-serif}
+.transaction-select-label small{font-size:12px;line-height:1.5;font-weight:400;color:var(--muted)}
+@media(prefers-color-scheme:light){.transaction-select-label select{background-color:#fff;color:#17253b;border-color:#cbd7e5}}
