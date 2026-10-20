@@ -263,3 +263,20 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
 
 /* Clean, modern Devanagari type for the Morya Team wordmark */
 .dashboard-hero h1{font-family:'Noto Sans Devanagari','Nirmala UI',sans-serif;font-weight:700;letter-spacing:-.035em}
+
+
+/* Clear transaction choices for non-technical users */
+.transaction-type-field{border:0;padding:0;margin:0;min-width:0;grid-column:1/-1}
+.transaction-type-field legend{font-size:13px;font-weight:800;color:var(--text);margin-bottom:8px}
+.field-help{margin:0 0 12px;color:var(--muted);font-size:13px}
+.transaction-type-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.transaction-option{display:flex;align-items:center;gap:12px;min-width:0;padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(18,29,46,.7);cursor:pointer}
+.transaction-option.selected{border-color:#ff7900;background:rgba(255,121,0,.1);box-shadow:0 0 0 1px rgba(255,121,0,.2)}
+.transaction-option input{width:18px;height:18px;flex:0 0 18px;accent-color:#ff7900;margin:0}
+.transaction-option-copy{display:grid;gap:4px;min-width:0;flex:1}
+.transaction-option-copy b{font-size:14px;color:var(--text)}
+.transaction-option-copy small{font-size:12px;line-height:1.4;color:var(--muted);font-weight:400}
+.transaction-option>strong{font-size:20px}
+.transaction-plus{color:#22c55e}.transaction-minus{color:#fb923c}
+@media(max-width:620px){.transaction-type-options{grid-template-columns:minmax(0,1fr)}.transaction-option{padding:13px 14px}}
+@media(prefers-color-scheme:light){.transaction-option{background:#fff}.transaction-option.selected{background:#fff5eb}}
