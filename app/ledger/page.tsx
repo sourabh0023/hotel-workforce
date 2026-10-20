@@ -4,12 +4,12 @@ import {FormEvent,useEffect,useMemo,useState} from "react";
 import {ArrowLeft,Wallet,Plus,RefreshCw} from "lucide-react";
 import Protected from "../components/Protected";
 import {supabase} from "../lib/supabase";
-type Employee={id:string;full_name:string;employee_code:string;pay_type:string};
-type Entry={id:string;employee_id:string;entry_date:string;entry_type:string;amount:number;description:string|null;employees?:{full_name:string;employee_code:string}|null};
+type Employee={id:string;full_name:string;employee_code:string;pay_type:string;monthly_salary:number|null;active:boolean;created_at:string};
+type Entry={id:string;employee_id:string;entry_date:string;entry_type:string;amount:number;description:string|null;employees?:{full_name:string;employee_code:string}|null};\ntype Absence={employee_id:string;work_date:string;status:string};
 function Ledger(){
  const today=new Date().toLocaleDateString("en-CA");
  const [employees,setEmployees]=useState<Employee[]>([]);
- const [rows,setRows]=useState<Entry[]>([]);
+ const [rows,setRows]=useState<Entry[]>([]);const [absences,setAbsences]=useState<Absence[]>([]);const [settlementEmployee,setSettlementEmployee]=useState("");const [lastDay,setLastDay]=useState(today);const [settlementBusy,setSettlementBusy]=useState(false);const [settlementPreview,setSettlementPreview]=useState<number|null>(null);
  const [employee,setEmployee]=useState("");
  const [date,setDate]=useState(today);
  const [type,setType]=useState("advance");
@@ -22,13 +22,13 @@ function Ledger(){
  const [message,setMessage]=useState("");
  const [busy,setBusy]=useState(false);
  async function load(){
-  const [e,l]=await Promise.all([
+  const [e,l,a]=await Promise.all([
    supabase().from("employees").select("id,full_name,employee_code,pay_type").order("full_name"),
    supabase().from("ledger_entries").select("id,employee_id,entry_date,entry_type,amount,description,employees(full_name,employee_code)").order("entry_date",{ascending:false}).limit(1000)
   ]);
-  if(e.error||l.error)setError(e.error?.message||l.error?.message||"Could not load ledger");
+  if(e.error||l.error||a.error)setError(e.error?.message||l.error?.message||a.error?.message||"Could not load ledger");
   setEmployees((e.data??[]) as Employee[]);
-  setRows((l.data??[]) as unknown as Entry[]);
+  setRows((l.data??[]) as unknown as Entry[]);setAbsences((a.data??[]) as Absence[]);
  }
  useEffect(()=>{load()},[]);
  const advances=useMemo(()=>rows.filter(r=>r.entry_type==="advance").map(a=>{
@@ -43,7 +43,7 @@ function Ledger(){
   if(error)setError(error.message);else{setAmount("");setDescription("");setMessage("Transaction saved.");await load()}
   setBusy(false);
  }
- async function adjustAdvance(e:FormEvent){
+ function calculateSettlement(emp:Employee,through:string){const start=(emp.created_at||through).slice(0,10);if(start>through)return 0;const salary=Number(emp.monthly_salary||0);let accrued=0;const cursor=new Date(start+"T12:00:00");const end=new Date(through+"T12:00:00");while(cursor<=end){const y=cursor.getFullYear(),m=cursor.getMonth(),daysInMonth=new Date(y,m+1,0).getDate();const monthStart=new Date(y,m,1);const monthEnd=new Date(y,m+1,0);const activeStart=cursor>monthStart?cursor:monthStart;const activeEnd=end<monthEnd?end:monthEnd;const activeDays=Math.max(0,Math.floor((activeEnd.getTime()-activeStart.getTime())/86400000)+1);accrued+=salary*activeDays/daysInMonth;cursor.setDate(1);cursor.setMonth(cursor.getMonth()+1);}const absenceDeduction=absences.filter(a=>a.employee_id===emp.id&&a.work_date>=start&&a.work_date<=through).reduce((sum,a)=>{const d=new Date(a.work_date+"T12:00:00");return sum+salary/new Date(d.getFullYear(),d.getMonth()+1,0).getDate()},0);const transactions=rows.filter(r=>r.employee_id===emp.id&&r.entry_date>=start&&r.entry_date<=through&&r.entry_type!=="advance_adjustment");const txBalance=transactions.reduce((sum,r)=>sum+((r.entry_type==="earning"||r.entry_type==="adjustment")?Number(r.amount):-Number(r.amount)),0);return Math.max(0,accrued-absenceDeduction+txBalance)}async function finalizeEmployee(e:FormEvent){e.preventDefault();const emp=employees.find(x=>x.id===settlementEmployee);if(!emp){setError("Choose an employee.");return}if(lastDay>today){setError("Last working date cannot be in the future.");return}if(!window.confirm("Calculate final settlement through "+lastDay+", record the remaining amount as paid, and mark "+emp.full_name+" inactive?"))return;setSettlementBusy(true);setError("");setMessage("");const amount=calculateSettlement(emp,lastDay);const {data:user}=await supabase().auth.getUser();if(amount>0){const {error}=await supabase().from("ledger_entries").insert({employee_id:emp.id,entry_date:lastDay,entry_type:"payment",amount,description:"Final settlement through "+lastDay+" (includes accrued salary, recorded absences and transactions)",created_by:user.user?.id});if(error){setError(error.message);setSettlementBusy(false);return}}const {error:deactivateError}=await supabase().from("employees").update({active:false}).eq("id",emp.id);if(deactivateError){setError("Settlement payment was recorded, but employee could not be marked inactive: "+deactivateError.message);setSettlementBusy(false);await load();return}setMessage("Final settlement recorded: ₹"+amount.toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2})+". Employee marked inactive.");setSettlementEmployee("");setSettlementPreview(null);await load();setSettlementBusy(false)}\n async function adjustAdvance(e:FormEvent){
   e.preventDefault();setBusy(true);setError("");setMessage("");
   const advance=advances.find(a=>a.id===selectedAdvance);
   const value=Number(adjustmentAmount);
@@ -72,6 +72,7 @@ function Ledger(){
    <label>Description (optional)<input value={description} onChange={e=>setDescription(e.target.value)}/></label>
    <button className="primary" disabled={busy||!employee}><Plus size={16}/>{busy?"Saving…":"Post transaction"}</button>
   </form>
+  <section className="absence-range"><p className="eyebrow">EMPLOYEE EXIT</p><h2>Final settlement</h2><p className="sub">Close an employee's payment through their last working date, including unpaid previous months, recorded absences, advances and payments. Then mark the employee inactive.</p><form className="form form-grid" onSubmit={finalizeEmployee}><label>Employee<select required value={settlementEmployee} onChange={e=>{setSettlementEmployee(e.target.value);setSettlementPreview(null)}}><option value="">Choose employee</option>{employees.filter(e=>e.active).map(e=><option key={e.id} value={e.id}>{e.full_name} · {e.employee_code}</option>)}</select></label><label>Last working date<input type="date" required max={today} value={lastDay} onChange={e=>{setLastDay(e.target.value);setSettlementPreview(null)}}/></label><button type="button" className="secondary" disabled={!settlementEmployee} onClick={()=>{const emp=employees.find(x=>x.id===settlementEmployee);if(emp)setSettlementPreview(calculateSettlement(emp,lastDay))}}>Calculate final amount</button>{settlementPreview!==null&&<div className="card"><p>Estimated final amount to pay</p><strong className="balance">{money(settlementPreview)}</strong><small>Based on current monthly salary, employee record date, recorded absences, and transactions up to the selected date.</small></div>}<button className="primary" disabled={settlementBusy||!settlementEmployee}>{settlementBusy?"Closing payment…":"Pay final balance & deactivate"}</button></form></section>
   <section className="absence-range"><p className="eyebrow">ADVANCE RECONCILIATION</p><h2>Adjust an advance against salary</h2><p className="sub">Select an advance and enter the amount to adjust.</p>
    <form className="form form-grid" onSubmit={adjustAdvance}>
     <label>Original advance<select required value={selectedAdvance} onChange={e=>{setSelectedAdvance(e.target.value);setAdjustmentAmount("")}}><option value="">Choose advance record</option>{advances.filter(a=>a.remaining>0).map(a=><option key={a.id} value={a.id}>{a.employees?.full_name||"Employee"} · {a.entry_date} · Given {money(Number(a.amount))} · Remaining {money(a.remaining)}</option>)}</select></label>
