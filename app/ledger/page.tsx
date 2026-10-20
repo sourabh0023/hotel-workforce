@@ -72,7 +72,13 @@ function Ledger(){
   <form className="form form-grid" onSubmit={add}>
    <label>Employee<select required value={employee} onChange={e=>setEmployee(e.target.value)}><option value="">Choose employee</option>{employees.map(e=><option key={e.id} value={e.id}>{e.full_name} · {e.employee_code}</option>)}</select></label>
    <label>Transaction date<input type="date" required value={date} onChange={e=>setDate(e.target.value)}/></label>
-   <label>Transaction type<select value={type} onChange={e=>setType(e.target.value)}><option value="earning">Wage / salary earned (+)</option><option value="advance">Advance paid (−)</option><option value="payment">Salary payment (−)</option><option value="deduction">Other deduction (−)</option><option value="adjustment">Balance adjustment (+)</option></select></label>
+   <fieldset className="transaction-type-field"><legend>What do you want to record?</legend><p className="field-help">Choose the action that matches what happened.</p><div className="transaction-type-options">{[
+    {value:"earning",title:"Salary earned",detail:"Add salary owed to the employee",sign:"+"},
+    {value:"advance",title:"Give an advance",detail:"Money given before payday",sign:"−"},
+    {value:"payment",title:"Pay salary",detail:"Salary money already paid",sign:"−"},
+    {value:"deduction",title:"Other deduction",detail:"Subtract another amount owed",sign:"−"},
+    {value:"adjustment",title:"Correct balance",detail:"Manually increase the balance",sign:"+"}
+   ].map(option=><label key={option.value} className={type===option.value?"transaction-option selected":"transaction-option"}><input type="radio" name="transactionType" value={option.value} checked={type===option.value} onChange={()=>setType(option.value)}/><span className="transaction-option-copy"><b>{option.title}</b><small>{option.detail}</small></span><strong className={option.sign==="+"?"transaction-plus":"transaction-minus"}>{option.sign}</strong></label>)}</div></fieldset>
    <label>Amount (₹)<input type="number" min="0.01" step="0.01" required value={amount} onChange={e=>setAmount(e.target.value)}/></label>
    <label>Description (optional)<input value={description} onChange={e=>setDescription(e.target.value)}/></label>
    <button className="primary" disabled={busy||!employee}><Plus size={16}/>{busy?"Saving…":"Post transaction"}</button>
