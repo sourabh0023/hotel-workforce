@@ -5,7 +5,8 @@ import {ArrowLeft,Wallet,Plus,RefreshCw} from "lucide-react";
 import Protected from "../components/Protected";
 import {supabase} from "../lib/supabase";
 type Employee={id:string;full_name:string;employee_code:string;pay_type:string;monthly_salary:number|null;active:boolean;created_at:string};
-type Entry={id:string;employee_id:string;entry_date:string;entry_type:string;amount:number;description:string|null;employees?:{full_name:string;employee_code:string}|null};\ntype Absence={employee_id:string;work_date:string;status:string};
+type Entry={id:string;employee_id:string;entry_date:string;entry_type:string;amount:number;description:string|null;employees?:{full_name:string;employee_code:string}|null};
+type Absence={employee_id:string;work_date:string;status:string};
 function Ledger(){
  const today=new Date().toLocaleDateString("en-CA");
  const [employees,setEmployees]=useState<Employee[]>([]);
@@ -23,8 +24,9 @@ function Ledger(){
  const [busy,setBusy]=useState(false);
  async function load(){
   const [e,l,a]=await Promise.all([
-   supabase().from("employees").select("id,full_name,employee_code,pay_type").order("full_name"),
-   supabase().from("ledger_entries").select("id,employee_id,entry_date,entry_type,amount,description,employees(full_name,employee_code)").order("entry_date",{ascending:false}).limit(1000)
+   supabase().from("employees").select("id,full_name,employee_code,pay_type,monthly_salary,active,created_at").order("full_name"),
+   supabase().from("ledger_entries").select("id,employee_id,entry_date,entry_type,amount,description,employees(full_name,employee_code)").order("entry_date",{ascending:false}).limit(1000),
+   supabase().from("attendance").select("employee_id,work_date,status").eq("status","absent").lte("work_date",today).order("work_date")
   ]);
   if(e.error||l.error||a.error)setError(e.error?.message||l.error?.message||a.error?.message||"Could not load ledger");
   setEmployees((e.data??[]) as Employee[]);
