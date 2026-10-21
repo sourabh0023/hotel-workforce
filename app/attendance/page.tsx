@@ -24,7 +24,7 @@ function AbsencePageContent() {
   async function load() {
     const client = supabase();
     const [e, a] = await Promise.all([
-      client.from("employees").select("id,full_name,employee_code,branch_name").eq("active", true).order("full_name"),
+      client.from("employees").select("id,full_name,employee_code,branch_name").eq("active", true).is("deleted_at",null).order("full_name"),
       client.from("attendance").select("id,work_date,status,employee_id,notes,employees(full_name,employee_code)").eq("status", "absent").gte("work_date", rangeStart).lte("work_date", rangeEnd).order("work_date", { ascending: false })
     ]);
     if (e.error || a.error) setError(e.error?.message || a.error?.message || "Could not load absence records.");
