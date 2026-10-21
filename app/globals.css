@@ -391,3 +391,24 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
  .mobile-nav-link span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
  .mobile-nav-link.active{color:#ff7900;background:rgba(255,121,0,.12)}
 }
+
+
+/* Employee edit modal */
+.employee-modal-backdrop{position:fixed;inset:0;z-index:150;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.72);backdrop-filter:blur(7px);overflow-y:auto}
+.employee-edit-modal{width:min(680px,100%);max-height:min(88vh,850px);overflow-y:auto;padding:26px;border:1px solid #343b46;border-radius:20px;background:#101722;box-shadow:0 24px 90px rgba(0,0,0,.55)}
+.employee-modal-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px}
+.employee-modal-heading .eyebrow{margin:0 0 8px}
+.employee-modal-heading h2{margin:0;font-size:24px;line-height:1.2}
+.employee-modal-heading .sub{margin:8px 0 0;font-size:13px}
+.employee-modal-close{display:grid;place-items:center;flex:0 0 40px;width:40px;height:40px;border:1px solid #34465e;border-radius:11px;background:#172438;color:#d8e0ed;cursor:pointer}
+.employee-edit-form{margin:0}
+.employee-modal-actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:10px;margin-top:4px}
+.employee-modal-actions button{min-width:125px}
+@media(max-width:620px){
+ .employee-modal-backdrop{align-items:flex-start;padding:12px;padding-bottom:calc(90px + env(safe-area-inset-bottom))}
+ .employee-edit-modal{margin:auto 0;width:100%;max-height:none;padding:18px;border-radius:16px}
+ .employee-modal-heading h2{font-size:21px}
+ .employee-edit-form{grid-template-columns:minmax(0,1fr);gap:14px}
+ .employee-modal-actions{position:sticky;bottom:-18px;background:#101722;padding:12px 0 4px}
+ .employee-modal-actions button{flex:1;min-width:0}
+}
