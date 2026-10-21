@@ -313,3 +313,24 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
  .yearly-metrics span{color:var(--muted);font-size:11px}
  .yearly-metrics b{font-size:12px;overflow-wrap:anywhere}
 }
+
+
+/* Compact payroll list on mobile: expandable details instead of tall cards */
+.yearly-payroll-desktop-note{margin:0 0 18px}
+@media(max-width:620px){
+ .yearly-payroll-cards{gap:8px}
+ .yearly-employee-card{padding:12px 14px;border-radius:12px}
+ .yearly-employee-head{align-items:center;gap:8px}
+ .yearly-employee-head b{font-size:14px}
+ .yearly-employee-head small{font-size:10px;margin-top:3px}
+ .yearly-employee-head>strong{font-size:14px;white-space:nowrap}
+ .yearly-remaining-label{margin:3px 0 0;font-size:10px}
+ .yearly-metrics{display:none}
+ .yearly-employee-card details{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+ .yearly-employee-card summary{font-size:11px;color:#ff7900;font-weight:700;cursor:pointer;list-style:none}
+ .yearly-employee-card summary::-webkit-details-marker{display:none}
+ .yearly-employee-card summary:after{content:"＋";float:right;font-size:14px}
+ .yearly-employee-card details[open] summary:after{content:"−"}
+ .yearly-employee-card details .yearly-metrics{display:grid;margin-top:10px;padding-top:10px}
+ .yearly-payroll-desktop-note{display:none}
+}
