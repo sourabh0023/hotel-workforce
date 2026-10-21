@@ -442,3 +442,15 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
  .table-wrap::-webkit-scrollbar{width:5px;height:5px}
  .table-wrap::-webkit-scrollbar-thumb{background:#536174;border-radius:8px}
 }
+
+
+/* Payroll overview: desktop keeps the wide table; mobile shows compact employee cards only */
+.yearly-payroll-cards{display:none}
+@media(max-width:620px){
+ .yearly-payroll-table{display:none!important}
+ .yearly-payroll-cards{display:block!important}
+}
+@media(min-width:621px){
+ .yearly-payroll-table{display:block!important}
+ .yearly-payroll-cards{display:none!important}
+}
