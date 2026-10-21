@@ -17,6 +17,7 @@ create table if not exists public.employees (
   daily_rate numeric(12,2) check (daily_rate is null or daily_rate >= 0),
   monthly_salary numeric(12,2) check (monthly_salary is null or monthly_salary >= 0),
   active boolean not null default true,
+  joining_date date not null default current_date,
   created_by uuid references auth.users(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
