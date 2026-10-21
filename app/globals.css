@@ -593,3 +593,23 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
   .balance-cards-scroll{max-height:390px;overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:auto;touch-action:pan-y}
   .yearly-payroll-scroll{overscroll-behavior-y:auto!important;overscroll-behavior-x:auto!important}
 }
+
+
+/* Collapsible hamburger navigation */
+.sidebar-menu-toggle{position:fixed;z-index:121;top:18px;left:18px;display:grid;place-items:center;width:42px;height:42px;border:1px solid #8b470f;border-radius:12px;background:#1b140f;color:#ff7900;cursor:pointer;box-shadow:0 5px 18px rgba(0,0,0,.22)}
+.sidebar-overlay{position:fixed;inset:0;z-index:118;border:0;background:rgba(0,0,0,.58);backdrop-filter:blur(2px)}
+.app-sidebar{transition:transform .22s ease}
+.sidebar-drawer-close{display:none}
+@media(min-width:761px){
+ .app-sidebar{z-index:120}
+ body:has(.app-sidebar) .topbar .brand{display:none}
+}
+@media(max-width:760px){
+ .app-sidebar{position:fixed;z-index:120;top:0;left:0;bottom:0;width:min(290px,84vw);transform:translateX(-105%);box-shadow:none;overflow-y:auto}
+ .app-sidebar.sidebar-open{transform:translateX(0);box-shadow:18px 0 45px rgba(0,0,0,.42)}
+ .sidebar-drawer-close{display:grid;place-items:center;position:absolute;top:16px;right:14px;width:38px;height:38px;border:1px solid #343434;border-radius:10px;background:#111;color:#eee}
+ body:has(.app-sidebar) .topbar .brand{display:none}
+ .topbar{padding-left:54px}
+ .sidebar-menu-toggle{top:18px;left:12px;width:38px;height:38px}
+ .mobile-app-nav{display:none}
+}
