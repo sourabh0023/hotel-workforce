@@ -561,3 +561,35 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
  .form-panel{padding:16px 14px;margin:20px 0 24px;border-radius:15px}
  .balance-cards-scroll{grid-template-columns:minmax(0,1fr);max-height:390px;gap:10px}
 }
+
+
+/* Scrollable lists: allow two-axis table movement and hand scrolling back to the page at edges */
+.table-wrap{
+  max-width:100%;
+  max-height:440px;
+  overflow:auto;
+  overscroll-behavior-x:contain;
+  overscroll-behavior-y:auto;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-x pan-y;
+}
+.table-wrap table{min-width:640px}
+.table-wrap thead th{position:sticky;top:0;z-index:3}
+.balance-cards-scroll{
+  max-height:560px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior-y:auto;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
+}
+.yearly-payroll-scroll{
+  overscroll-behavior-y:auto!important;
+  overscroll-behavior-x:auto!important;
+}
+@media(max-width:760px){
+  .table-wrap{max-height:360px;overflow:auto;overscroll-behavior-x:contain;overscroll-behavior-y:auto;touch-action:pan-x pan-y}
+  .table-wrap table{min-width:610px}
+  .balance-cards-scroll{max-height:390px;overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:auto;touch-action:pan-y}
+  .yearly-payroll-scroll{overscroll-behavior-y:auto!important;overscroll-behavior-x:auto!important}
+}
