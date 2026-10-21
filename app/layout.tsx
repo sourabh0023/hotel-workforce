@@ -1,3 +1,4 @@
+import { LanguageProvider } from "./components/LanguageProvider";
 import type { Metadata } from "next";
 import "./globals.css";
 export const metadata: Metadata = {
@@ -9,4 +10,4 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "MoryaEMP" },
   icons: { icon: [{ url: "/icon-192.svg", sizes: "192x192", type: "image/svg+xml" }, { url: "/icon-512.svg", sizes: "512x512", type: "image/svg+xml" }], apple: "/icon-192.svg" },
 };
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="en"><body>{children}</body></html>; }
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="en"><body><LanguageProvider>{children}</LanguageProvider></body></html>; }
