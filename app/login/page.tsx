@@ -4,9 +4,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Building2, ShieldCheck, Eye, EyeOff, ArrowRight, LockKeyhole, Users, CalendarCheck, Wallet } from "lucide-react";
 import { supabase } from "../lib/supabase";
+import { LanguageToggle, useLanguage, tx } from "../components/LanguageProvider";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { language } = useLanguage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -31,7 +33,7 @@ export default function LoginPage() {
 
   return (
     <main className="auth-shell">
-      <header className="auth-topbar">
+      <header className="auth-topbar"><LanguageToggle />
         <Link href="/" className="brand" aria-label="HotelFlow home">
           <span className="brand-mark"><Building2 size={25} strokeWidth={2.1} /></span>
           <span className="brand-wordmark">Hotel<span className="accent">Flow</span><small>WORKFORCE MANAGER</small></span>
@@ -68,9 +70,9 @@ export default function LoginPage() {
               <button className="password-toggle" type="button" onClick={() => setShowPassword(v => !v)} aria-label={showPassword ? "Hide password" : "Show password"}>{showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}</button>
             </div>
             {message && <p className="auth-error" role="alert">{message}</p>}
-            <button className="auth-submit" type="submit" disabled={busy}>{busy ? "Signing you in…" : "Sign in"} {!busy && <ArrowRight size={18}/>}</button>
+            <button className="auth-submit" type="submit" disabled={busy}>{busy ? tx(language,"Signing you in…","साइन इन होत आहे…") : tx(language,"Sign in","साइन इन")} {!busy && <ArrowRight size={18}/>}</button>
           </form>
-          <div className="auth-panel-footer"><LockKeyhole size={14}/><span>Your account is protected with secure authentication.</span></div>
+          <div className="auth-panel-footer"><LockKeyhole size={14}/><span>{tx(language,"Your account is protected with secure authentication.","तुमचे खाते सुरक्षित प्रमाणीकरणाने संरक्षित आहे.")}</span></div>
         </section>
       </div>
       <footer className="auth-footer"><span>© {new Date().getFullYear()} HotelFlow Workforce Manager</span><span>People first. Every shift.</span></footer>
