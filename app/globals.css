@@ -693,3 +693,18 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
   .sidebar-menu-toggle{background:#fff7ef;color:#e86d00;border-color:#f1c49b}
  }
 }
+
+
+/* Dashboard mobile polish: keep one header, remove duplicate controls row */
+@media(max-width:760px){
+ body:has(.mobile-site-header) .dashboard-topbar{display:none!important}
+ body:has(.mobile-site-header) .dashboard-hero{padding-top:30px;padding-bottom:34px}
+ body:has(.mobile-site-header) .dashboard-hero h1{font-size:clamp(40px,10vw,54px);line-height:1.15;letter-spacing:-1.2px;margin:8px 0}
+ body:has(.mobile-site-header) .employee-directory-dashboard .section-title{gap:16px}
+ body:has(.mobile-site-header) .employee-directory-dashboard .section-title h2{font-size:clamp(25px,6.5vw,32px);line-height:1.25}
+ body:has(.mobile-site-header) .employee-directory-dashboard .primary{max-width:100%;align-self:flex-start}
+ body:has(.mobile-site-header) .employee-directory-dashboard .table-wrap{max-width:100%;overscroll-behavior-x:contain}
+}
+@media(prefers-color-scheme:light){
+ .dashboard-hero .team-white{color:#17253b!important}
+}
