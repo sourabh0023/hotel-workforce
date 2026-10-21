@@ -36,7 +36,7 @@ export default function LoginPage() {
       <header className="auth-topbar"><LanguageToggle />
         <Link href="/" className="brand" aria-label="HotelFlow home">
           <span className="brand-mark"><Building2 size={25} strokeWidth={2.1} /></span>
-          <span className="brand-wordmark">Hotel<span className="accent">Flow</span><small>WORKFORCE MANAGER</small></span>
+          <span className="brand-wordmark">Hotel<span className="accent">Flow</span></span>
         </Link>
         <span className="secure-chip"><LockKeyhole size={14} /> Secure workspace</span>
       </header>
