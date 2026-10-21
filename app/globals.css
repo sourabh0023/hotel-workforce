@@ -708,3 +708,27 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
 @media(prefers-color-scheme:light){
  .dashboard-hero .team-white{color:#17253b!important}
 }
+
+
+/* Fix mobile drawer: an earlier mobile rule set the sidebar to display:none */
+@media(max-width:760px){
+ .app-sidebar{display:flex!important;visibility:visible!important}
+ .app-sidebar:not(.sidebar-open){pointer-events:none}
+ .app-sidebar.sidebar-open{display:flex!important;visibility:visible!important;pointer-events:auto;transform:translateX(0)!important}
+ .sidebar-overlay{z-index:118!important}
+ .mobile-site-header{z-index:119}
+ .sidebar-menu-toggle{position:static;z-index:121}
+ .app-sidebar{z-index:120!important}
+}
+@media(prefers-color-scheme:light){
+ @media(max-width:760px){
+  .app-sidebar{background:#fff!important;color:#17253b!important;border-right:1px solid #dbe4ef!important;box-shadow:10px 0 36px rgba(23,37,59,.16)}
+  .sidebar-brand{color:#17253b!important}
+  .sidebar-link{color:#52637a!important}
+  .sidebar-link:hover{background:#f3f6fa!important;color:#17253b!important}
+  .sidebar-link.active{background:#fff2e6!important;color:#c85d00!important;border-color:#f6c89f!important}
+  .sidebar-drawer-close{background:#f3f6fa!important;border-color:#dbe4ef!important;color:#263950!important}
+  .sidebar-logout{color:#35465c!important;border-color:#cbd7e5!important}
+  .sidebar-overlay{background:rgba(15,23,42,.32)!important;backdrop-filter:blur(1px)}
+ }
+}
