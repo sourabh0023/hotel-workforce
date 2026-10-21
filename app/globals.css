@@ -287,3 +287,29 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
 .transaction-select-label select{width:100%;min-height:48px;padding:0 44px 0 14px;border:1px solid #34465e;border-radius:12px;background-color:#0c1627;color:#f2f6fc;font:500 14px 'DM Sans',ui-sans-serif,system-ui,sans-serif}
 .transaction-select-label small{font-size:12px;line-height:1.5;font-weight:400;color:var(--muted)}
 @media(prefers-color-scheme:light){.transaction-select-label select{background-color:#fff;color:#17253b;border-color:#cbd7e5}}
+
+
+/* Responsive yearly payroll controls and employee summary cards */
+.yearly-payroll-cards{display:none}
+.yearly-controls{flex-wrap:wrap}
+.yearly-controls select{min-width:130px}
+@media(max-width:620px){
+ .payroll-dashboard .yearly-section-title{display:flex;flex-direction:column;align-items:stretch;gap:16px}
+ .payroll-dashboard .yearly-section-title h2{font-size:23px;line-height:1.25;overflow-wrap:anywhere}
+ .payroll-dashboard .yearly-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:stretch;justify-content:stretch;width:100%}
+ .payroll-dashboard .yearly-controls select{width:100%;min-width:0}
+ .payroll-dashboard .yearly-controls .secondary{min-height:48px}
+ .yearly-payroll-table{display:none}
+ .yearly-payroll-cards{display:grid;gap:12px}
+ .yearly-employee-card{min-width:0;padding:16px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(140deg,#151f32,#101829)}
+ .yearly-employee-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+ .yearly-employee-head>div{min-width:0}
+ .yearly-employee-head b{display:block;font-size:15px;overflow-wrap:anywhere}
+ .yearly-employee-head small{display:block;margin-top:5px;color:var(--muted);font-size:11px;overflow-wrap:anywhere}
+ .yearly-employee-head>strong{font-size:15px;text-align:right;overflow-wrap:anywhere}
+ .yearly-remaining-label{margin:7px 0 14px;color:var(--muted);font-size:11px}
+ .yearly-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;border-top:1px solid var(--line);padding-top:13px}
+ .yearly-metrics>div{display:grid;gap:5px;min-width:0}
+ .yearly-metrics span{color:var(--muted);font-size:11px}
+ .yearly-metrics b{font-size:12px;overflow-wrap:anywhere}
+}
