@@ -65,10 +65,10 @@ function AbsencePageContent() {
   return <main className="shell">
     <nav className="topbar"><Link href="/" className="brand"><span className="brand-mark"><CalendarCheck /></span><span>Morya<span className="accent">EMP</span></span></Link><div className="nav-actions"><LanguageToggle /><Link href="/" className="back"><ArrowLeft size={16} /> {tx(language,"Dashboard","मुख्य पृष्ठ")}</Link></div></nav>
     <section className="content">
-      <p className="eyebrow">पगारासाठी अनुपस्थिती</p><h1>Bulk absence entry</h1>
+      <p className="eyebrow">{tx(language,"Absence tracking","अनुपस्थिती नोंद")}</p><h1>{tx(language,"Bulk absence entry","एकत्रित अनुपस्थिती नोंद")}</h1>
       <p className="sub">फक्त अनुपस्थित दिवस नोंदवा. हजेरी किंवा उपस्थिती नोंदवण्याची गरज नाही. अनुपस्थित दिवसांनुसार पगारातून कपात डॅशबोर्डवर मोजली जाईल.</p>
       <section className="absence-range">
-        <div><p className="eyebrow">एकाच वेळी अनेक दिवस</p><h2>अनुपस्थितीची तारीख निवडा</h2><p className="sub">कर्मचारी आणि अनुपस्थितीचा कालावधी निवडा.</p></div>
+        <div><p className="eyebrow">{tx(language,"Multiple days at once","एकाच वेळी अनेक दिवस")}</p><h2>{tx(language,"Select absence dates","अनुपस्थितीच्या तारखा निवडा")}</h2><p className="sub">{tx(language,"Choose employee and absence period.","कर्मचारी आणि अनुपस्थितीचा कालावधी निवडा.")}</p></div>
         <form className="form form-grid absence-form" onSubmit={saveAbsences}>
           <label>कर्मचारी<select required value={employee} onChange={e => setEmployee(e.target.value)}><option value="">कर्मचारी निवडा</option>{employees.map(e => <option key={e.id} value={e.id}>{e.full_name} · {e.employee_code} · {e.branch_name}</option>)}</select></label>
           <label>पासून<input type="date" required value={rangeStart} onChange={e => setRangeStart(e.target.value)} /></label>
