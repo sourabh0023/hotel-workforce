@@ -613,3 +613,51 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
  .sidebar-menu-toggle{top:18px;left:12px;width:38px;height:38px}
  .mobile-app-nav{display:none}
 }
+
+
+/* Polish ledger forms in light theme: readable labels and consistent surfaces */
+@media(prefers-color-scheme:light){
+ .form-panel,
+ .form.form-grid.form-panel{
+   background:#fff!important;
+   color:#17253b!important;
+   border-color:#dbe4ef!important;
+   box-shadow:0 12px 32px rgba(15,35,60,.08)!important;
+ }
+ .form-panel label,
+ .form-grid label,
+ .absence-range .form-grid label,
+ .transaction-select-label{
+   color:#263950!important;
+ }
+ .form-panel input,
+ .form-panel select,
+ .form-grid input,
+ .form-grid select,
+ .transaction-select-label select{
+   background-color:#fff!important;
+   color:#17253b!important;
+   border-color:#cbd7e5!important;
+ }
+ .form-panel input::placeholder,
+ .form-grid input::placeholder{
+   color:#8796aa!important;
+ }
+ .form-panel small,
+ .transaction-select-label small{
+   color:#61718a!important;
+ }
+ .absence-range{
+   background:#fff!important;
+   border-color:#dbe4ef!important;
+   box-shadow:0 8px 24px rgba(15,35,60,.05);
+ }
+ .absence-range .sub,
+ .absence-range p:not(.eyebrow){
+   color:#61718a!important;
+ }
+ .form-panel .primary,
+ .form-grid .primary{
+   color:#111!important;
+ }
+}
