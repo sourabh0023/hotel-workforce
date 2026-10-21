@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabase";
+import NavigationSidebar from "./NavigationSidebar";
 
 export default function Protected({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -40,5 +41,5 @@ export default function Protected({ children }: { children: React.ReactNode }) {
     return <main className="shell"><section className="content"><p className="eyebrow">DATABASE CONNECTION REQUIRED</p><h1>Connect Supabase to continue</h1><p className="sub">{setupError}</p><p className="muted">After adding the environment variables in Vercel, redeploy the project and refresh this page.</p></section></main>;
   }
   if (!ready) return <main className="shell"><p className="muted">Checking secure session…</p></main>;
-  return <>{children}</>;
+  return <><NavigationSidebar/><div className="app-with-sidebar">{children}</div></>;
 }
