@@ -334,3 +334,12 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
  .yearly-employee-card details .yearly-metrics{display:grid;margin-top:10px;padding-top:10px}
  .yearly-payroll-desktop-note{display:none}
 }
+
+
+/* Compact language switcher shared by login and app pages */
+.language-toggle{display:inline-flex;align-items:center;gap:3px;padding:3px;border:1px solid var(--line);border-radius:11px;background:#101829;flex-shrink:0}
+.language-toggle button{min-height:32px;padding:6px 10px;border:0;border-radius:8px;background:transparent;color:#aebbd0;font:700 12px 'DM Sans',ui-sans-serif,system-ui,sans-serif;cursor:pointer}
+.language-toggle button.active{background:#ff7900;color:#111}
+.language-toggle button:focus-visible{outline:2px solid #ff7900;outline-offset:2px}
+@media(max-width:560px){.language-toggle button{padding:6px 8px;font-size:11px}.topbar .nav-actions{gap:8px}}
+@media(prefers-color-scheme:light){.language-toggle{background:#f3f6fa;border-color:#cbd7e5}.language-toggle button{color:#52637a}.language-toggle button.active{background:#ff7900;color:#111}}
