@@ -4,11 +4,13 @@ import { FormEvent, useEffect, useState } from "react";
 import { ArrowLeft, CalendarCheck } from "lucide-react";
 import Protected from "../components/Protected";
 import { supabase } from "../lib/supabase";
+import { LanguageToggle, useLanguage, tx } from "../components/LanguageProvider";
 
 type Employee = { id: string; full_name: string; employee_code: string; branch_name: string };
 type RecordRow = { id: string; work_date: string; status: string; employee_id: string; employees?: { full_name: string; employee_code: string } | null; notes: string | null };
 
 function AbsencePageContent() {
+  const { language } = useLanguage();
   const today = new Date().toLocaleDateString("en-CA");
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [rows, setRows] = useState<RecordRow[]>([]);
@@ -61,7 +63,7 @@ function AbsencePageContent() {
   }
 
   return <main className="shell">
-    <nav className="topbar"><Link href="/" className="brand"><span className="brand-mark"><CalendarCheck /></span><span>Morya<span className="accent">EMP</span><small>WORKFORCE MANAGER</small></span></Link><Link href="/" className="back"><ArrowLeft size={16} /> Dashboard</Link></nav>
+    <nav className="topbar"><Link href="/" className="brand"><span className="brand-mark"><CalendarCheck /></span><span>Morya<span className="accent">EMP</span><small>WORKFORCE MANAGER</small></span></Link><div className="nav-actions"><LanguageToggle /><Link href="/" className="back"><ArrowLeft size={16} /> {tx(language,"Dashboard","मुख्य पृष्ठ")}</Link></div></nav>
     <section className="content">
       <p className="eyebrow">पगारासाठी अनुपस्थिती</p><h1>Bulk absence entry</h1>
       <p className="sub">फक्त अनुपस्थित दिवस नोंदवा. हजेरी किंवा उपस्थिती नोंदवण्याची गरज नाही. अनुपस्थित दिवसांनुसार पगारातून कपात डॅशबोर्डवर मोजली जाईल.</p>
@@ -76,7 +78,7 @@ function AbsencePageContent() {
         {message && <p className="success-message">{message}</p>}
       </section>
       {error && <p className="error">{error}</p>}
-      <div className="table-wrap"><table><thead><tr><th>कर्मचारी</th><th>तारीख</th><th>स्थिती</th><th>नोंद</th></tr></thead><tbody>{rows.length === 0 ? <tr><td colSpan={4}>या कालावधीत अनुपस्थितीची नोंद नाही.</td></tr> : rows.map(r => <tr key={r.id}><td>{r.employees?.full_name ?? r.employee_id}<small>{r.employees?.employee_code ?? ""}</small></td><td>{r.work_date}</td><td><span className="status">अनुपस्थित</span></td><td>{r.notes || "—"}</td></tr>)}</tbody></table></div>
+      <div className="table-wrap"><table><thead><tr><th>{tx(language,"Employee","कर्मचारी")}</th><th>{tx(language,"Date","तारीख")}</th><th>{tx(language,"Status","स्थिती")}</th><th>{tx(language,"Notes","नोंदी")}</th></tr></thead><tbody>{rows.length === 0 ? <tr><td colSpan={4}>{tx(language,"No absences recorded for this period.","या कालावधीत अनुपस्थितीची नोंद नाही.")}</td></tr> : rows.map(r => <tr key={r.id}><td>{r.employees?.full_name ?? r.employee_id}<small>{r.employees?.employee_code ?? ""}</small></td><td>{r.work_date}</td><td><span className="status">अनुपस्थित</span></td><td>{r.notes || "—"}</td></tr>)}</tbody></table></div>
     </section>
   </main>;
 }
