@@ -412,3 +412,20 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
  .employee-modal-actions{position:sticky;bottom:-18px;background:#101722;padding:12px 0 4px}
  .employee-modal-actions button{flex:1;min-width:0}
 }
+
+
+/* Final alignment and spacing fixes */
+.employee-modal-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}
+.employee-modal-actions .secondary,.employee-modal-actions .primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;white-space:nowrap}
+.employee-modal-actions .secondary,.employee-modal-actions .primary{margin:0}
+.employee-edit-form{row-gap:16px;column-gap:18px}
+.employee-edit-modal{box-sizing:border-box}
+.table-wrap{margin-top:20px}
+.yearly-payroll-scroll{display:grid;gap:8px;max-height:560px;overflow-y:auto;overscroll-behavior:contain;padding:2px 5px 2px 0;scrollbar-width:thin;scrollbar-color:#4b5563 transparent}
+.yearly-payroll-scroll .yearly-employee-card{margin:0}
+@media(max-width:620px){
+ .employee-modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+ .employee-modal-actions .secondary,.employee-modal-actions .primary{width:100%;min-width:0;padding:0 10px}
+ .table-wrap{margin-top:24px}
+ .yearly-payroll-scroll{max-height:430px;gap:8px;padding-right:2px}
+}
