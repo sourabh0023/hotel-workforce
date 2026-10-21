@@ -759,3 +759,9 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
  .payroll-dashboard .card{background:#fff!important;color:#17253b!important;border-color:#dbe4ef!important}
  .payroll-dashboard .yearly-section-title h2{color:#17253b!important}
 }
+
+
+/* Destructive employee archive action */
+.danger-action{color:#dc2626!important;border-color:#fecaca!important;background:#fff5f5!important}
+.danger-action:hover{color:#b91c1c!important;border-color:#ef4444!important;background:#fee2e2!important}
+.danger-action:focus-visible{outline:2px solid #dc2626;outline-offset:2px}
