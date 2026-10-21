@@ -26,15 +26,27 @@ function Ledger(){
  const [message,setMessage]=useState("");
  const [busy,setBusy]=useState(false);
  async function load(){
-  const [e,l,a,h]=await Promise.all([
-   supabase().from("employees").select("id,full_name,employee_code,pay_type,monthly_salary,active,created_at,joining_date").order("full_name"),
-   supabase().from("ledger_entries").select("id,employee_id,entry_date,entry_type,amount,description,employees(full_name,employee_code)").order("entry_date",{ascending:false}).limit(1000),
-   supabase().from("attendance").select("employee_id,work_date,status").eq("status","absent").lte("work_date",today).order("work_date"),
-   supabase().from("employee_salary_history").select("employee_id,monthly_salary,effective_from").order("effective_from")
+  const client=supabase();
+  const [employeeResult,ledgerResult,absenceResult,historyResult]=await Promise.all([
+   client.from("employees").select("id,full_name,employee_code,pay_type,monthly_salary,active,created_at,joining_date").order("full_name"),
+   client.from("ledger_entries").select("id,employee_id,entry_date,entry_type,amount,description,employees(full_name,employee_code)").order("entry_date",{ascending:false}).limit(1000),
+   client.from("attendance").select("employee_id,work_date,status").eq("status","absent").lte("work_date",today).order("work_date"),
+   client.from("employee_salary_history").select("employee_id,monthly_salary,effective_from").order("effective_from")
   ]);
-  if(e.error||l.error||a.error||h.error)setError(e.error?.message||l.error?.message||a.error?.message||h.error?.message||"Could not load ledger");
-  setEmployees((e.data??[]) as Employee[]);
-  setRows((l.data??[]) as unknown as Entry[]);setAbsences((a.data??[]) as Absence[]);setSalaryHistory((h.data??[]) as SalaryHistory[]);
+  let employeeData=employeeResult.data;
+  let employeeError=employeeResult.error;
+  // Older databases may not yet have joining_date; still load employees so the dropdown works.
+  if(employeeError && /joining_date|column/i.test(employeeError.message)){
+   const fallback=await client.from("employees").select("id,full_name,employee_code,pay_type,monthly_salary,active,created_at").order("full_name");
+   employeeData=fallback.data as typeof employeeData;
+   employeeError=fallback.error;
+  }
+  setEmployees((employeeData??[]).map(e=>({...e,joining_date:(e as {joining_date?:string}).joining_date||e.created_at})) as Employee[]);
+  setRows((ledgerResult.data??[]) as unknown as Entry[]);
+  setAbsences((absenceResult.data??[]) as Absence[]);
+  setSalaryHistory((historyResult.data??[]) as SalaryHistory[]);
+  const errors=[employeeError,ledgerResult.error,absenceResult.error,historyResult.error].filter(Boolean);
+  if(errors.length)setError(errors.map(e=>e?.message).join(" · "));
  }
  useEffect(()=>{load()},[]);
  const advances=useMemo(()=>rows.filter(r=>r.entry_type==="advance").map(a=>{
