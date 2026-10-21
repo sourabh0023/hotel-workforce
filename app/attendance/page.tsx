@@ -63,7 +63,7 @@ function AbsencePageContent() {
   }
 
   return <main className="shell">
-    <nav className="topbar"><Link href="/" className="brand"><span className="brand-mark"><CalendarCheck /></span><span>Morya<span className="accent">EMP</span><small>WORKFORCE MANAGER</small></span></Link><div className="nav-actions"><LanguageToggle /><Link href="/" className="back"><ArrowLeft size={16} /> {tx(language,"Dashboard","मुख्य पृष्ठ")}</Link></div></nav>
+    <nav className="topbar"><Link href="/" className="brand"><span className="brand-mark"><CalendarCheck /></span><span>Morya<span className="accent">EMP</span></span></Link><div className="nav-actions"><LanguageToggle /><Link href="/" className="back"><ArrowLeft size={16} /> {tx(language,"Dashboard","मुख्य पृष्ठ")}</Link></div></nav>
     <section className="content">
       <p className="eyebrow">पगारासाठी अनुपस्थिती</p><h1>Bulk absence entry</h1>
       <p className="sub">फक्त अनुपस्थित दिवस नोंदवा. हजेरी किंवा उपस्थिती नोंदवण्याची गरज नाही. अनुपस्थित दिवसांनुसार पगारातून कपात डॅशबोर्डवर मोजली जाईल.</p>
