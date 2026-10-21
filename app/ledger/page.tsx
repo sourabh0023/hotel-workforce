@@ -28,7 +28,7 @@ function Ledger(){
  async function load(){
   const client=supabase();
   const [employeeResult,ledgerResult,absenceResult,historyResult]=await Promise.all([
-   client.from("employees").select("id,full_name,employee_code,pay_type,monthly_salary,active,created_at,joining_date").order("full_name"),
+   client.from("employees").select("id,full_name,employee_code,pay_type,monthly_salary,active,created_at,joining_date,deleted_at").is("deleted_at",null).order("full_name"),
    client.from("ledger_entries").select("id,employee_id,entry_date,entry_type,amount,description,employees(full_name,employee_code)").order("entry_date",{ascending:false}).limit(1000),
    client.from("attendance").select("employee_id,work_date,status").eq("status","absent").lte("work_date",today).order("work_date"),
    client.from("employee_salary_history").select("employee_id,monthly_salary,effective_from").order("effective_from")
@@ -37,7 +37,7 @@ function Ledger(){
   let employeeError=employeeResult.error;
   // Older databases may not yet have joining_date; still load employees so the dropdown works.
   if(employeeError && /joining_date|column/i.test(employeeError.message)){
-   const fallback=await client.from("employees").select("id,full_name,employee_code,pay_type,monthly_salary,active,created_at").order("full_name");
+   const fallback=await client.from("employees").select("id,full_name,employee_code,pay_type,monthly_salary,active,created_at,deleted_at").is("deleted_at",null).order("full_name");
    employeeData=fallback.data as typeof employeeData;
    employeeError=fallback.error;
   }
