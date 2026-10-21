@@ -732,3 +732,30 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
   .sidebar-overlay{background:rgba(15,23,42,.32)!important;backdrop-filter:blur(1px)}
  }
 }
+
+
+/* Consistent mobile page header and light-theme payroll cards */
+@media(max-width:760px){
+ body:has(.mobile-site-header) .topbar{display:none!important}
+ body:has(.mobile-site-header) .app-with-sidebar .content{padding-top:22px}
+ body:has(.mobile-site-header) .mobile-site-header{position:sticky;top:0}
+}
+@media(prefers-color-scheme:light){
+ .yearly-employee-card{
+   background:#fff!important;
+   color:#17253b!important;
+   border-color:#dbe4ef!important;
+   box-shadow:0 5px 16px rgba(23,37,59,.06);
+ }
+ .yearly-employee-head b,
+ .yearly-employee-head>strong,
+ .yearly-metrics b{color:#17253b!important}
+ .yearly-employee-head small,
+ .yearly-remaining-label,
+ .yearly-metrics span{color:#61718a!important}
+ .yearly-metrics,
+ .yearly-employee-card details{border-color:#e1e7ef!important}
+ .yearly-employee-card summary{color:#d96500!important}
+ .payroll-dashboard .card{background:#fff!important;color:#17253b!important;border-color:#dbe4ef!important}
+ .payroll-dashboard .yearly-section-title h2{color:#17253b!important}
+}
