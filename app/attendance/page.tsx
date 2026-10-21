@@ -66,19 +66,19 @@ function AbsencePageContent() {
     <nav className="topbar"><Link href="/" className="brand"><span className="brand-mark"><CalendarCheck /></span><span>Morya<span className="accent">EMP</span></span></Link><div className="nav-actions"><LanguageToggle /><Link href="/" className="back"><ArrowLeft size={16} /> {tx(language,"Dashboard","मुख्य पृष्ठ")}</Link></div></nav>
     <section className="content">
       <p className="eyebrow">{tx(language,"Absence tracking","अनुपस्थिती नोंद")}</p><h1>{tx(language,"Bulk absence entry","एकत्रित अनुपस्थिती नोंद")}</h1>
-      <p className="sub">फक्त अनुपस्थित दिवस नोंदवा. हजेरी किंवा उपस्थिती नोंदवण्याची गरज नाही. अनुपस्थित दिवसांनुसार पगारातून कपात डॅशबोर्डवर मोजली जाईल.</p>
+      <p className="sub">{tx(language,"Record only the days an employee was absent. You do not need to record attendance or present days. Salary deductions are calculated on the dashboard from recorded absences.","फक्त अनुपस्थित दिवस नोंदवा. हजेरी किंवा उपस्थिती नोंदवण्याची गरज नाही. अनुपस्थित दिवसांनुसार पगारातून कपात डॅशबोर्डवर मोजली जाईल.")}</p>
       <section className="absence-range">
         <div><p className="eyebrow">{tx(language,"Multiple days at once","एकाच वेळी अनेक दिवस")}</p><h2>{tx(language,"Select absence dates","अनुपस्थितीच्या तारखा निवडा")}</h2><p className="sub">{tx(language,"Choose employee and absence period.","कर्मचारी आणि अनुपस्थितीचा कालावधी निवडा.")}</p></div>
         <form className="form form-grid absence-form" onSubmit={saveAbsences}>
-          <label>कर्मचारी<select required value={employee} onChange={e => setEmployee(e.target.value)}><option value="">कर्मचारी निवडा</option>{employees.map(e => <option key={e.id} value={e.id}>{e.full_name} · {e.employee_code} · {e.branch_name}</option>)}</select></label>
-          <label>पासून<input type="date" required value={rangeStart} onChange={e => setRangeStart(e.target.value)} /></label>
-          <label>पर्यंत<input type="date" required min={rangeStart} value={rangeEnd} onChange={e => setRangeEnd(e.target.value)} /></label>
-          <button className="primary" disabled={busy || !employee}><CalendarCheck size={16} />{busy ? "जतन करत आहे…" : "अनुपस्थिती जतन करा"}</button>
+          <label>{tx(language,"Employee","कर्मचारी")}<select required value={employee} onChange={e => setEmployee(e.target.value)}><option value="">{tx(language,"Choose employee","कर्मचारी निवडा")}</option>{employees.map(e => <option key={e.id} value={e.id}>{e.full_name} · {e.employee_code} · {e.branch_name}</option>)}</select></label>
+          <label>{tx(language,"From","पासून")}<input type="date" required value={rangeStart} onChange={e => setRangeStart(e.target.value)} /></label>
+          <label>{tx(language,"To","पर्यंत")}<input type="date" required min={rangeStart} value={rangeEnd} onChange={e => setRangeEnd(e.target.value)} /></label>
+          <button className="primary" disabled={busy || !employee}><CalendarCheck size={16} />{busy ? tx(language,"Saving…","जतन होत आहे…") : tx(language,"Save absences","अनुपस्थिती जतन करा")}</button>
         </form>
         {message && <p className="success-message">{message}</p>}
       </section>
       {error && <p className="error">{error}</p>}
-      <div className="table-wrap"><table><thead><tr><th>{tx(language,"Employee","कर्मचारी")}</th><th>{tx(language,"Date","तारीख")}</th><th>{tx(language,"Status","स्थिती")}</th><th>{tx(language,"Notes","नोंदी")}</th></tr></thead><tbody>{rows.length === 0 ? <tr><td colSpan={4}>{tx(language,"No absences recorded for this period.","या कालावधीत अनुपस्थितीची नोंद नाही.")}</td></tr> : rows.map(r => <tr key={r.id}><td>{r.employees?.full_name ?? r.employee_id}<small>{r.employees?.employee_code ?? ""}</small></td><td>{r.work_date}</td><td><span className="status">अनुपस्थित</span></td><td>{r.notes || "—"}</td></tr>)}</tbody></table></div>
+      <div className="table-wrap"><table><thead><tr><th>{tx(language,"Employee","कर्मचारी")}</th><th>{tx(language,"Date","तारीख")}</th><th>{tx(language,"Status","स्थिती")}</th><th>{tx(language,"Notes","नोंदी")}</th></tr></thead><tbody>{rows.length === 0 ? <tr><td colSpan={4}>{tx(language,"No absences recorded for this period.","या कालावधीत अनुपस्थितीची नोंद नाही.")}</td></tr> : rows.map(r => <tr key={r.id}><td>{r.employees?.full_name ?? r.employee_id}<small>{r.employees?.employee_code ?? ""}</small></td><td>{r.work_date}</td><td><span className="status">{tx(language,"Absent","अनुपस्थित")}</span></td><td>{r.notes || "—"}</td></tr>)}</tbody></table></div>
     </section>
   </main>;
 }
