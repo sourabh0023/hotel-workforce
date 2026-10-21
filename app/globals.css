@@ -343,3 +343,23 @@ button:hover,.primary:hover,.auth-submit:hover{filter:brightness(1.06)}
 .language-toggle button:focus-visible{outline:2px solid #ff7900;outline-offset:2px}
 @media(max-width:560px){.language-toggle button{padding:6px 8px;font-size:11px}.topbar .nav-actions{gap:8px}}
 @media(prefers-color-scheme:light){.language-toggle{background:#f3f6fa;border-color:#cbd7e5}.language-toggle button{color:#52637a}.language-toggle button.active{background:#ff7900;color:#111}}
+
+
+/* Keep the mobile dashboard header balanced */
+@media(max-width:620px){
+ .dashboard-topbar{height:auto;min-height:78px;padding:14px 0;gap:12px;align-items:center;flex-wrap:wrap}
+ .dashboard-topbar .brand{gap:10px;min-width:0;flex:1 1 145px}
+ .dashboard-topbar .brand-mark{width:42px;height:42px;border-radius:13px}
+ .dashboard-topbar .brand-wordmark{font-size:18px}
+ .dashboard-topbar .brand small{font-size:8px;letter-spacing:1.2px;line-height:1.35}
+ .dashboard-topbar .nav-actions{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex:0 1 auto;min-width:0;flex-wrap:wrap}
+ .dashboard-topbar .nav-actions .pill{display:none}
+ .dashboard-topbar .nav-actions .secondary{min-height:40px;padding:9px 11px;font-size:12px;white-space:nowrap}
+ .dashboard-topbar .nav-actions .secondary svg{width:14px;height:14px}
+}
+@media(max-width:390px){
+ .dashboard-topbar{align-items:flex-start}
+ .dashboard-topbar .brand{flex-basis:135px}
+ .dashboard-topbar .nav-actions{max-width:100%}
+ .dashboard-topbar .nav-actions .secondary{padding:8px 9px}
+}
