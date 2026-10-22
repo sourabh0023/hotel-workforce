@@ -40,7 +40,7 @@ function AbsencePageContent() {
     event.preventDefault();
     setBusy(true); setError(""); setMessage("");
     if (!employee) { setError("कृपया कर्मचारी निवडा."); setBusy(false); return; }
-    if (dateMode === "range" && rangeEnd < rangeStart) { setError(tx(language,"End date must be on or after the start date.","शेवटची तारीख सुरुवातीच्या तारखेनंतर असावी."); setBusy(false); return; }
+    if (dateMode === "range" && rangeEnd < rangeStart) { setError(tx(language,"End date must be on or after the start date.","शेवटची तारीख सुरुवातीच्या तारखेनंतर असावी.")); setBusy(false); return; }
     const selectedDates = dateMode === "range" ? (()=>{const out:string[]=[];for(let d=new Date(rangeStart+"T12:00:00");d.toISOString().slice(0,10)<=rangeEnd;d.setDate(d.getDate()+1))out.push(d.toISOString().slice(0,10));return out})() : [...new Set(specificDates.filter(Boolean))].sort();
     if (!selectedDates.length) { setError(tx(language,"Select at least one absence date.","किमान एक अनुपस्थितीची तारीख निवडा."));setBusy(false);return; }
     const client = supabase();
