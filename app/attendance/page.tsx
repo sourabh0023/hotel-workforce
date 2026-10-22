@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
-import { ArrowLeft, CalendarCheck } from "lucide-react";
+import { ArrowLeft, CalendarCheck, Plus, X } from "lucide-react";
 import Protected from "../components/Protected";
 import { supabase } from "../lib/supabase";
 import { LanguageToggle, useLanguage, tx } from "../components/LanguageProvider";
@@ -17,6 +17,8 @@ function AbsencePageContent() {
   const [employee, setEmployee] = useState("");
   const [rangeStart, setRangeStart] = useState(today);
   const [rangeEnd, setRangeEnd] = useState(today);
+  const [dateMode, setDateMode] = useState<"range"|"specific">("range");
+  const [specificDates, setSpecificDates] = useState<string[]>([today]);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -38,26 +40,25 @@ function AbsencePageContent() {
     event.preventDefault();
     setBusy(true); setError(""); setMessage("");
     if (!employee) { setError("कृपया कर्मचारी निवडा."); setBusy(false); return; }
-    if (rangeEnd < rangeStart) { setError("शेवटची तारीख सुरुवातीच्या तारखेनंतर असावी."); setBusy(false); return; }
+    if (dateMode === "range" && rangeEnd < rangeStart) { setError(tx(language,"End date must be on or after the start date.","शेवटची तारीख सुरुवातीच्या तारखेनंतर असावी."); setBusy(false); return; }
+    const selectedDates = dateMode === "range" ? (()=>{const out:string[]=[];for(let d=new Date(rangeStart+"T12:00:00");d.toISOString().slice(0,10)<=rangeEnd;d.setDate(d.getDate()+1))out.push(d.toISOString().slice(0,10));return out})() : [...new Set(specificDates.filter(Boolean))].sort();
+    if (!selectedDates.length) { setError(tx(language,"Select at least one absence date.","किमान एक अनुपस्थितीची तारीख निवडा."));setBusy(false);return; }
     const client = supabase();
     const { data: user } = await client.auth.getUser();
     const { data: existing, error: readError } = await client.from("attendance")
-      .select("work_date,status").eq("employee_id", employee).gte("work_date", rangeStart).lte("work_date", rangeEnd);
+      .select("work_date,status").eq("employee_id", employee).in("work_date", selectedDates);
     if (readError) { setError(readError.message); setBusy(false); return; }
     const existingRows = existing ?? [];
     const existingAbsences = new Set(existingRows.filter(r => r.status === "absent").map(r => r.work_date));
     const dates: string[] = [];
-    for (let d = new Date(rangeStart + "T12:00:00"); d.toISOString().slice(0, 10) <= rangeEnd; d.setDate(d.getDate() + 1)) {
-      const day = d.toISOString().slice(0, 10);
-      if (!existingAbsences.has(day)) dates.push(day);
-    }
+    for (const day of selectedDates) { if (!existingAbsences.has(day)) dates.push(day); }
     if (dates.length) {
       const payload = dates.map(work_date => ({ employee_id: employee, work_date, status: "absent", notes: "Bulk absence", recorded_by: user.user?.id }));
       const { error: saveError } = await client.from("attendance").upsert(payload, { onConflict: "employee_id,work_date" });
       if (saveError) { setError(saveError.message); setBusy(false); return; }
     }
     const overwritten = existingRows.filter(r => r.status !== "absent").length;
-    setMessage(dates.length + " अनुपस्थितीच्या नोंदी जतन झाल्या." + (overwritten ? " " + overwritten + " आधीच्या नोंदी अनुपस्थित म्हणून बदलल्या." : ""));
+    setMessage(dates.length + " " + tx(language,"absence dates saved.","अनुपस्थितीच्या तारखा जतन झाल्या.") + (overwritten ? " " + overwritten + " " + tx(language,"existing records changed to absent.","आधीच्या नोंदी अनुपस्थित म्हणून बदलल्या.") : ""));
     await load();
     setBusy(false);
   }
@@ -71,8 +72,8 @@ function AbsencePageContent() {
         <div><p className="eyebrow">{tx(language,"Multiple days at once","एकाच वेळी अनेक दिवस")}</p><h2>{tx(language,"Select absence dates","अनुपस्थितीच्या तारखा निवडा")}</h2><p className="sub">{tx(language,"Choose employee and absence period.","कर्मचारी आणि अनुपस्थितीचा कालावधी निवडा.")}</p></div>
         <form className="form form-grid absence-form" onSubmit={saveAbsences}>
           <label>{tx(language,"Employee","कर्मचारी")}<select required value={employee} onChange={e => setEmployee(e.target.value)}><option value="">{tx(language,"Choose employee","कर्मचारी निवडा")}</option>{employees.map(e => <option key={e.id} value={e.id}>{e.full_name} · {e.employee_code} · {e.branch_name}</option>)}</select></label>
-          <label>{tx(language,"From","पासून")}<input type="date" required value={rangeStart} onChange={e => setRangeStart(e.target.value)} /></label>
-          <label>{tx(language,"To","पर्यंत")}<input type="date" required min={rangeStart} value={rangeEnd} onChange={e => setRangeEnd(e.target.value)} /></label>
+          <div className="absence-date-mode"><button type="button" className={dateMode==="range"?"primary":"secondary"} onClick={()=>setDateMode("range")}>{tx(language,"Continuous date range","सलग तारखांचा कालावधी")}</button><button type="button" className={dateMode==="specific"?"primary":"secondary"} onClick={()=>setDateMode("specific")}>{tx(language,"Selected dates","निवडक तारखा")}</button></div>
+          {dateMode==="range"?<><label>{tx(language,"From","पासून")}<input type="date" required value={rangeStart} onChange={e => setRangeStart(e.target.value)} /></label><label>{tx(language,"To","पर्यंत")}<input type="date" required min={rangeStart} value={rangeEnd} onChange={e => setRangeEnd(e.target.value)} /></label></>:<div className="specific-absence-dates"><p>{tx(language,"Add only the days the employee was absent, even if there are gaps between dates.","कर्मचारी ज्या दिवशी अनुपस्थित होता फक्त त्याच तारखा जोडा; मधल्या दिवसांची नोंद होणार नाही.")}</p>{specificDates.map((day,index)=><div className="specific-date-row" key={index}><label>{tx(language,"Absence date","अनुपस्थितीची तारीख")}<input type="date" required value={day} onChange={e=>setSpecificDates(prev=>prev.map((v,i)=>i===index?e.target.value:v))}/></label>{specificDates.length>1&&<button type="button" className="secondary" aria-label={tx(language,"Remove date","तारीख काढा")} onClick={()=>setSpecificDates(prev=>prev.filter((_,i)=>i!==index))}><X size={16}/></button>}</div>)}<button type="button" className="secondary" onClick={()=>setSpecificDates(prev=>[...prev,today])}><Plus size={15}/>{tx(language,"Add another date","आणखी तारीख जोडा")}</button></div>}
           <button className="primary" disabled={busy || !employee}><CalendarCheck size={16} />{busy ? tx(language,"Saving…","जतन होत आहे…") : tx(language,"Save absences","अनुपस्थिती जतन करा")}</button>
         </form>
         {message && <p className="success-message">{message}</p>}
