@@ -827,3 +827,10 @@ button.secondary.edit-action:hover{
  .specific-date-row{align-items:flex-end}
  .specific-date-row button{min-height:44px}
 }
+
+
+/* Accessible dashboard employee details popup */
+.modal-backdrop{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.72);backdrop-filter:blur(5px)}
+.employee-details-modal{border-radius:22px}
+.employee-details-modal .section-title h2{margin-bottom:0}
+@media(max-width:760px){.modal-backdrop{padding:8px}.employee-details-modal{border-radius:16px}.employee-details-modal .nav-actions{flex-wrap:wrap}}
