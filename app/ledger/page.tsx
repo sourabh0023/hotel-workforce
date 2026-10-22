@@ -78,7 +78,7 @@ function Ledger(){
   if(error)setError(error.message);else{setAdjustmentAmount("");setAdjustmentNote("");setSelectedAdvance("");setMessage("Advance adjustment recorded and linked to the original advance.");await load()}
   setBusy(false);
  }
- const totals=rows.reduce((acc,r)=>{if(r.entry_type==="advance_adjustment")return acc;acc[r.employee_id]=(acc[r.employee_id]||0)+(r.entry_type==="earning"||r.entry_type==="adjustment"?Number(r.amount):-Number(r.amount));return acc},{} as Record<string,number>);
+ const totals=employees.reduce((acc,emp)=>{acc[emp.id]=calculateSettlement(emp,today);return acc},{} as Record<string,number>);
  const money=(n:number)=>"₹"+n.toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
  const label=(t:string)=>({"earning":"Salary / earning","advance":"Advance paid","payment":"Salary payment","deduction":"Other deduction","adjustment":"Balance adjustment","advance_adjustment":"Advance adjusted"}[t]||t);
  return <main className="shell"><nav className="topbar"><Link href="/" className="brand"><span className="brand-mark"><Wallet/></span><span>Morya<span className="accent">EMP</span></span></Link><div className="nav-actions"><LanguageToggle/><Link href="/" className="back"><ArrowLeft size={16}/> {tx(language,"Dashboard","मुख्य पृष्ठ")}</Link></div></nav><section className="content">
