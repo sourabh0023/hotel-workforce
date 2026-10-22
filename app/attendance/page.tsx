@@ -59,7 +59,7 @@ function AbsencePageContent() {
     }
     const overwritten = existingRows.filter(r => r.status !== "absent").length;
     setMessage(dates.length + " " + tx(language,"absence dates saved.","अनुपस्थितीच्या तारखा जतन झाल्या.") + (overwritten ? " " + overwritten + " " + tx(language,"existing records changed to absent.","आधीच्या नोंदी अनुपस्थित म्हणून बदलल्या.") : ""));
-    await load();
+    if (dateMode === "specific") { setRangeStart(selectedDates[0]); setRangeEnd(selectedDates[selectedDates.length-1]); } else { await load(); }
     setBusy(false);
   }
 
