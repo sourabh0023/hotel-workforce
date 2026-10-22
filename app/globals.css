@@ -804,3 +804,26 @@ button.secondary.edit-action:hover{
 .nav-actions button.secondary.edit-action:focus-visible{
   outline:2px solid #60a5fa!important;outline-offset:2px;
 }
+
+
+/* Dashboard quick actions and employee details dialog */
+.dashboard-action-card{font:inherit;text-align:left;color:inherit;cursor:pointer;width:100%;border:1px solid var(--border);background:var(--card);display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+.dashboard-action-card h3{margin:0}
+.dashboard-action-card .card-link{display:flex;align-items:center;gap:6px;margin-top:auto}
+.employee-details-modal{width:min(1100px,96vw);max-height:86vh;overflow:auto;padding:22px;border:1px solid var(--border);background:var(--card);color:var(--text);box-shadow:0 24px 80px rgba(0,0,0,.4)}
+.employee-details-modal .section-title{align-items:center;gap:14px}
+.employee-details-modal .table-wrap{max-height:56vh;overflow:auto}
+.employee-details-modal .nav-actions{justify-content:flex-end;margin-top:16px}
+.absence-date-mode{display:flex;gap:10px;flex-wrap:wrap;grid-column:1/-1}
+.specific-absence-dates{grid-column:1/-1;display:grid;gap:12px}
+.specific-absence-dates>p{margin:0;color:var(--muted)}
+.specific-date-row{display:flex;align-items:flex-end;gap:10px}
+.specific-date-row label{flex:1;min-width:0}
+.specific-date-row button{flex:0 0 auto}
+@media(max-width:760px){
+ .employee-details-modal{width:calc(100vw - 24px);max-height:84vh;padding:14px}
+ .employee-details-modal .section-title{align-items:flex-start}
+ .dashboard-action-card{min-height:150px}
+ .specific-date-row{align-items:flex-end}
+ .specific-date-row button{min-height:44px}
+}
