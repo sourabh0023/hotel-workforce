@@ -872,3 +872,24 @@ button.secondary.edit-action:hover{
   .mobile-nav-link.active{color:#c85d00!important;background:#fff0e1!important}
  }
 }
+
+
+/* Salary & advances: compact action hub with detail forms in popups */
+.ledger-action-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:28px 0}
+.ledger-action{font:inherit;text-align:left;color:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:12px;min-height:170px;padding:22px;border:1px solid var(--border);background:var(--card);border-radius:20px}
+.ledger-action h3{margin:0;font-size:1.12rem}
+.ledger-action>span:last-child{color:var(--accent);line-height:1.5}
+.ledger-modal-backdrop{z-index:350;overflow-y:auto;align-items:flex-start;padding:22px 12px}
+.ledger-modal{width:min(920px,100%);max-height:none;overflow:visible;padding:22px;border:1px solid var(--border);border-radius:22px;background:var(--card);color:var(--text);box-shadow:0 24px 80px rgba(0,0,0,.45);margin:auto}
+.ledger-modal .section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}
+.ledger-modal .section-title h2{margin:0}
+.ledger-modal .absence-range{margin:0;padding:0;border:0;background:transparent}
+.ledger-modal .table-wrap{max-height:55vh;overflow:auto}
+.ledger-modal .cards{max-height:55vh;overflow:auto}
+@media(max-width:760px){
+ .ledger-action-grid{grid-template-columns:1fr;gap:12px;margin:22px 0}
+ .ledger-action{min-height:130px;padding:18px}
+ .ledger-modal-backdrop{padding:10px 8px 90px}
+ .ledger-modal{padding:16px;border-radius:17px}
+ .ledger-modal .section-title{align-items:flex-start}
+}
