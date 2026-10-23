@@ -893,3 +893,20 @@ button.secondary.edit-action:hover{
  .ledger-modal{padding:16px;border-radius:17px}
  .ledger-modal .section-title{align-items:flex-start}
 }
+
+
+/* Outstanding payroll popup total and per-employee breakdown */
+.outstanding-total{display:flex;flex-direction:column;gap:8px;padding:22px;margin:8px 0 18px;border:1px solid rgba(255,121,0,.45);border-radius:18px;background:linear-gradient(135deg,rgba(255,121,0,.15),rgba(18,28,45,.72))}
+.outstanding-total>span{color:var(--muted);font-weight:650}
+.outstanding-total>strong{font-size:clamp(1.8rem,6vw,2.6rem);color:#37d6c0;line-height:1.2}
+.outstanding-total>small{color:var(--muted)}
+.outstanding-employee-list{display:grid;gap:12px}
+.outstanding-employee{padding:18px;margin:0}
+.outstanding-employee-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.outstanding-employee-head h3{margin:0 0 5px}
+.outstanding-employee-head p{margin:0;color:var(--muted);font-size:.9rem}
+.outstanding-employee-head>strong{color:#37d6c0;white-space:nowrap;font-size:1.08rem}
+.outstanding-breakdown{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+.outstanding-breakdown>span{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:.82rem}
+.outstanding-breakdown b{color:var(--text);font-size:.95rem;overflow-wrap:anywhere}
+@media(max-width:600px){.outstanding-total{padding:18px}.outstanding-employee{padding:15px}.outstanding-employee-head{flex-direction:column}.outstanding-breakdown{grid-template-columns:1fr;gap:12px}.outstanding-breakdown>span{flex-direction:row;justify-content:space-between;gap:8px}.outstanding-breakdown b{text-align:right}}
