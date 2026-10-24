@@ -910,3 +910,44 @@ button.secondary.edit-action:hover{
 .outstanding-breakdown>span{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:.82rem}
 .outstanding-breakdown b{color:var(--text);font-size:.95rem;overflow-wrap:anywhere}
 @media(max-width:600px){.outstanding-total{padding:18px}.outstanding-employee{padding:15px}.outstanding-employee-head{flex-direction:column}.outstanding-breakdown{grid-template-columns:1fr;gap:12px}.outstanding-breakdown>span{flex-direction:row;justify-content:space-between;gap:8px}.outstanding-breakdown b{text-align:right}}
+
+
+/* Dashboard: clean, aligned payroll-style overview */
+.dashboard-hero{padding:30px 0 18px!important}
+.dashboard-hero h1{font-size:clamp(34px,7vw,58px)!important;margin:0!important}
+.dashboard-shortcuts,.advance-dashboard,.payroll-dashboard{margin:18px 0 26px!important;padding:22px!important;border:1px solid var(--border);border-radius:22px;background:linear-gradient(145deg,rgba(24,34,51,.88),rgba(14,18,27,.96));box-shadow:0 12px 30px rgba(0,0,0,.12)}
+.dashboard-shortcuts .section-title,.advance-dashboard .section-title{margin:0;align-items:center;gap:18px}
+.dashboard-shortcuts .section-title h2,.advance-dashboard .section-title h2{font-size:clamp(21px,4.5vw,28px);line-height:1.2;margin:0 0 8px}
+.dashboard-shortcuts .muted,.advance-dashboard .muted{margin:0;line-height:1.55;max-width:680px}
+.dashboard-professional-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;flex-shrink:0}
+.dashboard-professional-actions .primary,.dashboard-professional-actions .secondary{min-height:46px;padding:12px 16px;border-radius:13px;display:inline-flex;align-items:center;justify-content:center;gap:9px;text-decoration:none;font-weight:650;white-space:normal}
+.dashboard-professional-actions .secondary{background:#172338;border:1px solid #344966;color:#e1e9f4}
+.advance-dashboard{border-color:rgba(255,121,0,.25);background:linear-gradient(120deg,rgba(255,121,0,.09),rgba(19,28,43,.96) 48%)}
+.payroll-dashboard{padding:22px!important}
+.payroll-dashboard .yearly-section-title{margin-bottom:18px}
+.payroll-total{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px;margin:0 0 18px;border:1px solid rgba(55,214,192,.2);border-radius:16px;background:rgba(55,214,192,.06)}
+.payroll-total .balance{font-size:clamp(22px,5vw,32px);white-space:nowrap}
+.yearly-payroll-cards{margin-top:12px}
+.yearly-payroll-scroll{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-height:600px;overflow:auto;padding:2px}
+.yearly-employee-card{border:1px solid var(--border);border-radius:15px;background:rgba(8,14,25,.48);padding:15px}
+.yearly-employee-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.yearly-employee-head b{font-size:15px}
+.yearly-employee-head small{display:block;color:var(--muted);margin-top:5px}
+.yearly-employee-head .balance,.yearly-employee-head .negative-balance{font-size:16px;white-space:nowrap}
+.yearly-remaining-label{font-size:12px;color:var(--muted);margin:10px 0}
+.yearly-employee-card details{border-top:1px solid var(--border);padding-top:10px}
+.yearly-employee-card summary{cursor:pointer;color:var(--accent);font-weight:650;font-size:13px}
+.yearly-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.yearly-metrics>div{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:12px}
+.yearly-metrics b{color:var(--text);text-align:right}
+@media(max-width:760px){
+ .dashboard-hero{padding:22px 0 12px!important}
+ .dashboard-shortcuts,.advance-dashboard,.payroll-dashboard{margin:12px 0 18px!important;padding:16px!important;border-radius:18px}
+ .dashboard-shortcuts .section-title,.advance-dashboard .section-title{align-items:stretch}
+ .dashboard-professional-actions{display:grid;grid-template-columns:1fr;width:100%;justify-content:stretch}
+ .dashboard-professional-actions .primary,.dashboard-professional-actions .secondary{width:100%;min-height:46px}
+ .payroll-total{align-items:flex-start;flex-direction:column;gap:7px;padding:16px}
+ .yearly-payroll-scroll{grid-template-columns:1fr;max-height:480px}
+ .yearly-employee-head{align-items:flex-start}
+ .yearly-metrics{grid-template-columns:1fr}
+}
