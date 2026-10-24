@@ -79,8 +79,21 @@ function Ledger(){
       return;
     }
     if(!deletedRows||deletedRows.length===0){
-      setError(tx(language,"Record not found. It may have already been deleted.","नोंद सापडली नाही. ती आधीच हटवली असू शकते."));
-      await load();return;
+      // PostgREST can return no deleted rows when DELETE is permitted but the
+      // RETURNING SELECT is hidden by a SELECT policy. Re-fetch the list and
+      // verify whether this exact advance still exists before deciding.
+      await load();
+      const {data:stillThere,error:verifyError}=await client.from("ledger_entries").select("id").eq("id",advance.id).eq("entry_type","advance").maybeSingle();
+      if(verifyError){
+        setError(tx(language,"Could not verify whether the record was deleted. Refresh and check the list.","नोंद हटवली आहे का हे तपासता आले नाही. यादी रिफ्रेश करून तपासा.")+" ("+verifyError.message+")");
+        return;
+      }
+      if(stillThere){
+        setError(tx(language,"Record not found or deletion was blocked. Please check permissions and try again.","नोंद हटवता आली नाही किंवा हटवण्यास अडथळा आला. परवानग्या तपासून पुन्हा प्रयत्न करा."));
+        return;
+      }
+      setMessage(tx(language,"Record deleted successfully.","नोंद यशस्वीपणे हटवली."));
+      return;
     }
     setMessage(tx(language,"Record deleted successfully.","नोंद यशस्वीपणे हटवली."));
     await load();
